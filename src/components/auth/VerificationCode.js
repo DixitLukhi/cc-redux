@@ -4,12 +4,16 @@ import bgImage from "../../assets/images/login-images.png"
 import logo from "../../assets/images/logo.png"
 import topCircle from "../../assets/images/top-circle.png"
 import bottomCircle from "../../assets/images/bottom-circle.png";
-import { baseurl } from '../../api/baseurl';
+import { baseUrl } from '../../api/baseUrl';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify'
+import { useDispatch } from 'react-redux'
+import { otpVerify, resendOtpVerify } from './authSlice'
+import { forgotPass } from '../../redux/services/authServices'
 
 
 function VerificationCode() {
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [otpValue, setOtpValue] = useState(["0", "0", "0", "0"]);
 	const otpLength = otpValue.Length
@@ -37,7 +41,11 @@ function VerificationCode() {
 
 	const reSendOtp = async () => {
 		try {
-			const response = await axios.post(`${baseurl}/api/user/reset-password-email`, { email: email });
+			const payload = {
+				email: email,
+			}
+			const response = await dispatch(resendOtpVerify(payload)).unwrap();
+			// const response = await axios.post(`${baseUrl}/api/user/reset-password-email`, { email: email });
 			if (response.data.IsSuccess) {
 				toast.success("Otp resend successfully.");
 			} else {
@@ -61,7 +69,8 @@ function VerificationCode() {
 				otp: fullOtp
 			}
 			if (fullOtp != "0000") {
-				const response = await axios.post(`${baseurl}/api/user/verify-admin`, payload);
+				const response = await dispatch(otpVerify(payload)).unwrap();
+				// const response = await axios.post(`${baseUrl}/api/user/verify-admin`, payload);
 				if (response.data.IsSuccess) {
 					toast.success("Otp verified successfully.")
 					setTimeout(() => {

@@ -4,38 +4,43 @@ import bgImage from "../../assets/images/login-images.png"
 import logo from "../../assets/images/logo.png"
 import topCircle from "../../assets/images/top-circle.png"
 import bottomCircle from "../../assets/images/bottom-circle.png";
-import { baseurl } from '../../api/baseurl';
+import { baseUrl } from '../../api/baseUrl';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { forgotPass } from '../../redux/services/authServices';
 
 function ForgotPassword() {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [userData, setUserData] = useState({ email: ""});
-	const [error, setError] = useState(false);
+    const [userData, setUserData] = useState({ email: "" });
+    const [error, setError] = useState(false);
 
     const setFormField = (field, value) => {
-		setUserData({ ...userData, [field]: value })
-	}
+        setUserData({ ...userData, [field]: value })
+    }
 
 
-    const handelReset =async (data) => {
+    const handelReset = async (data) => {
         data.preventDefault();
-		try {
-			const response = await axios.post(`${baseurl}/api/user/reset-password-email`, { email: userData.email });
-			
-            if(response.data.IsSuccess){
+        try {
+            const payload = { email: userData.email };
+            const response = await dispatch(forgotPass(payload)).unwrap();
+            // const response = await axios.post(`${baseUrl}/api/user/reset-password-email`, { email: userData.email });
+
+            if (response.data.IsSuccess) {
                 toast.success(response.data.Message);
                 setTimeout(() => {
-                    localStorage.setItem("email",userData.email)
+                    localStorage.setItem("email", userData.email)
                     navigate("../verifyreset")
                 }, 1000);
             } else {
                 toast.error(response.data.Message);
             }
-		} catch (error) {
+        } catch (error) {
             toast.error('Something went wrong!!!');
-			setError(true);
-		}
+            setError(true);
+        }
     }
     return (
         <div className="flex h-screen">
@@ -69,17 +74,17 @@ function ForgotPassword() {
                 </div>
             </div>
             <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
         </div>
     )
 }

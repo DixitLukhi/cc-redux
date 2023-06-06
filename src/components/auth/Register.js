@@ -7,13 +7,17 @@ import bottomCircle from "../../assets/images/bottom-circle.png";
 import axios from 'axios';
 import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { baseurl } from '../../api/baseurl';
+import { baseUrl } from '../../api/baseUrl';
 import { ToastContainer, toast } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
+import { registration } from './authSlice'
+import { useDispatch } from 'react-redux'
 
 
 
 const Register = () => {
+	const dispatch = useDispatch();
+
 	const navigate = useNavigate();
 	const [isVisible, setIsVisible] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -47,7 +51,10 @@ const Register = () => {
 		// return
 		setLoading(true);
 		try {
-			const response = await axios.post(`${baseurl}/api/user/register-admin`, values);
+			const payload = Object.assign({}, values);
+			const response = await dispatch(registration(payload)).unwrap();
+
+			// const response = await axios.post(`${baseUrl}/api/user/register-admin`, values);
 			if (response.data?.IsSuccess) {
 				toast.success("Registered successfully.")
 				setTimeout(() => {

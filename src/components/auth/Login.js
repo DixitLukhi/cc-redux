@@ -4,12 +4,15 @@ import bgImage from "../../assets/images/login-images.png"
 import logo from "../../assets/images/logo.png"
 import topCircle from "../../assets/images/top-circle.png"
 import bottomCircle from "../../assets/images/bottom-circle.png";
-import { baseurl } from '../../api/baseurl';
+import { baseUrl } from '../../api/baseUrl';
 import { ToastContainer, toast } from 'react-toastify';
 
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { logInUser } from './authSlice';
 
 const Login = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [userData, setUserData] = useState({ email: "", password: "" });
     const [error, setError] = useState(false);
@@ -25,18 +28,22 @@ const Login = () => {
         data.preventDefault();
         setLoading(true);
         try {
-            const response = await axios.post(`${baseurl}/api/user/login-admin`, { email: userData.email, password: userData.password });
+            let payload = Object.assign({}, userData);
+
+            const response = await dispatch(logInUser(payload)).unwrap();
+
+            // const response = await axios.post(`${baseUrl}/api/user/login-admin`, { email: userData.email, password: userData.password });
             if (response.data?.IsSuccess) {
                 toast.success("Login successfully.");
                 setTimeout(() => {
-                    localStorage.clear();
-                    localStorage.setItem("Token", response.data?.Data.token);
+                    // localStorage.clear();
+                    // localStorage.setItem("Token", response.data?.Data.token);
                     navigate("../dashboard")
                 }, 1000);
                 setLoading(true);
             } else {
                 toast.error(response.data.Message);
-                setLoading(true);
+                setLoading(false);
             }
         } catch (error) {
             toast.error("Something went wrong!!");

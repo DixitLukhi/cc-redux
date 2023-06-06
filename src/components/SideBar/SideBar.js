@@ -14,50 +14,55 @@ import CardAdd from "../../assets/svg/newaddCard.svg";
 import Profile from "../../assets/images/profile.png";
 import BackArrow from "../../assets/svg/backArrow.svg";
 // import Login from '../auth/Login'
-import CardHolderList from "../../components/Cardholder/CardHolderList";
-import AdminAccountDetails from "../Admin/AdminAccountDetails";
-import AdminCards from "../Admin/AdminCards";
-import AdminAddCard from "../Admin/AdminAddCard";
-import CreateAccount from "../../components/Cardholder/CreateAccount";
-import SingleCardHolderDetail from "../../components/Cardholder/SingleCardHolderDetail";
-import SingleCardHolderCardsList from "../../components/Cardholder/SingleCardHolderCardsList";
-import TransactionHistory from "../../components/Transactions/TransactionHistory";
-import Payments from "../../components/Payments/Payments";
-import SinglePaymentRequestDetails from "../../components/Payments/SinglePaymentRequestDetails";
-import SinglePaymentPaidDetails from "../../components/Payments/SinglePaymentPaidDetails";
-import Commission from "../../components/Commission/Commission";
-import CommissionPaidHistory from "../../components/Commission/CommissionPaidHistory";
-import CommissionUnpaidHistory from "../../components/Commission/CommissionUnpaidHistory";
-import CardHolderAddCard from "../../components/Cardholder/CardHolderAddCard";
-import SingleUserCommissionDetails from "../../components/Commission/SingleUserCommissionDetails";
-import { baseurl } from "../../api/baseurl";
+import CardHolderList from "../../pages/Cardholder/CardHolderList";
+import AdminAccountDetails from "../../pages/Admin/AdminAccountDetails";
+import AdminCards from "../../pages/Admin/AdminCards";
+import AdminAddCard from "../../pages/Admin/AdminAddCard";
+import CreateAccount from "../../pages/Cardholder/CreateAccount";
+import SingleCardHolderDetail from "../../pages/Cardholder/SingleCardHolderDetail";
+import SingleCardHolderCardsList from "../../pages/Cardholder/SingleCardHolderCardsList";
+import TransactionHistory from "../../pages/Transactions/TransactionHistory";
+import Payments from "../../pages/Payments/Payments";
+import SinglePaymentRequestDetails from "../../pages/Payments/SinglePaymentRequestDetails";
+import SinglePaymentPaidDetails from "../../pages/Payments/SinglePaymentPaidDetails";
+import Commission from "../../pages/Commission/Commission";
+import CommissionPaidHistory from "../../pages/Commission/CommissionPaidHistory";
+import CommissionUnpaidHistory from "../../pages/Commission/CommissionUnpaidHistory";
+import CardHolderAddCard from "../../pages/Cardholder/CardHolderAddCard";
+import SingleUserCommissionDetails from "../../pages/Commission/SingleUserCommissionDetails";
+import { baseUrl } from "../../api/baseUrl";
 import axios from "axios";
-import Dashboard from "../../components/Dashboard/Dashboard";
+import Dashboard from "../../pages/Dashboard/Dashboard";
 import previewImage1 from "../../assets/svg/Previewimage.svg";
-import AdminWallet from "../Admin/AdminWallet";
-import SingleCardDetails from "../../components/Cardholder/SingleCardDetails";
-import CardHolderEditCard from "../../components/Cardholder/CardHolderEditCard";
-import CardList from "../../components/Cards/CardList";
-import CardDetails from "../../components/Cards/CardDetails";
-import EditCardDetails from "../../components/Cards/EditCardDetails";
-import AdminCardDetails from "../Admin/AdminCardDetails";
-import AdminEditCard from "../Admin/AdminEditCard";
+import AdminWallet from "../../pages/Admin/AdminWallet";
+import SingleCardDetails from "../../pages/Cardholder/SingleCardDetails";
+import CardHolderEditCard from "../../pages/Cardholder/CardHolderEditCard";
+import CardList from "../../pages/Cards/CardList";
+import CardDetails from "../../pages/Cards/CardDetails";
+import EditCardDetails from "../../pages/Cards/EditCardDetails";
+import AdminCardDetails from "../../pages/Admin/AdminCardDetails";
+import AdminEditCard from "../../pages/Admin/AdminEditCard";
+import { useDispatch, useSelector } from "react-redux";
+import { getProfile, useProfile } from "../../pages/Admin/adminSlice";
 
 function SideBar() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const token = localStorage.getItem("Token");
-  const [details, setDetails] = useState({});
+  // const [details, setDetails] = useState({});
   const [navbarOpen, setNavbarOpen] = useState(false);
   const header = {
     Authorization: `Bearer ${token}`,
   };
-
-  const getCardDetails = async () => {
+  let profile = useProfile();
+  // const a = useSelector(state => state.dashboard);
+  const getProfileDetails = async () => {
     try {
-      const response = await axios.get(`${baseurl}/api/user/user-profile`, {
-        headers: header,
-      });
-      setDetails(response.data.Data);
+      await dispatch(getProfile()).unwrap();
+      // const response = await axios.get(`${baseUrl}/api/user/user-profile`, {
+      //   headers: header,
+      // });
+      // setDetails(response.data.Data);
     } catch (error) {
       console.log(error);
     }
@@ -71,7 +76,7 @@ function SideBar() {
   };
 
   useEffect(() => {
-    getCardDetails();
+    getProfileDetails()
   }, []);
 
   const logout = () => {
@@ -508,8 +513,8 @@ function SideBar() {
                       <div className="w-9 h-9 overflow-hidden rounded-full bg-white">
                         <img
                           src={
-                            details?.profile_pic && details?.profile_pic !== ""
-                              ? details?.profile_pic
+                            profile?.profile_pic && profile?.profile_pic !== ""
+                              ? profile?.profile_pic
                               : previewImage1
                           }
                           alt="Profile Avatar"
@@ -517,7 +522,7 @@ function SideBar() {
                         />
                       </div>
                       <span className="hidden sm:block text-left max-w-[120px] min-w-[120px] w-full text-sm font-bold leading-5 text-[#1E293B] ml-3 truncate">
-                        {details?.first_name + " " + details?.last_name}
+                        {profile?.first_name + " " + profile?.last_name}
                       </span>
                     </div>
                     <img

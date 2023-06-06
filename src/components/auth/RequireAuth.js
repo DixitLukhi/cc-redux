@@ -1,6 +1,6 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import UseAuth from "./UseAuth";
-import Dashboard from "../Dashboard/Dashboard";
+import Dashboard from "../../pages/Dashboard/Dashboard";
 
 const RequireAuth = () => {
     const { auth } = UseAuth();
