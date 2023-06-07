@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
-import DemoImage from "../../assets/images/profile.png"
-import axios from 'axios';
-import { baseUrl } from '../../api/baseUrl';
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import Modal from '../../common/Modals/Modal';
-import PaymentDetails from '../../components/Popup/PaymentDetails';
 import { FilterMatchMode } from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-function PaymentRequests({ paymentRequestData, setReloade }) {
+import PaymentDetails from '../../components/Popup/PaymentDetails';
+function DepositRequests({ paymentRequestData, setReloade }) {
 
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(true);
@@ -28,7 +24,8 @@ function PaymentRequests({ paymentRequestData, setReloade }) {
 		'Authorization': `Bearer ${token}`,
 	}
 	const getPaymentRequests = () => {
-		setPaymentRequests((paymentRequestData).filter((request) => (request.payment_status === false) && request.payment_method !== "Withdraw" && request.payment_method !== "Cycle"));
+
+		setPaymentRequests((paymentRequestData).filter((request) => (request.payment_status === false) && request.payment_method==="Deposit"));
 		setLoading(false);
 
 	}
@@ -158,8 +155,8 @@ function PaymentRequests({ paymentRequestData, setReloade }) {
 						filters={filters}
 						globalFilterFields={['card.card_holder_name', 'card.card_number', 'card.card_bank_name', 'due_date']}
 						header={headerf}
-						selectionMode="single"
-						onSelectionChange={(col) => { localStorage.setItem("request_id", col.value.request_id); navigate("singlepaymentrequestdetails") }} 
+						// selectionMode="single"
+						// onSelectionChange={(col) => { localStorage.setItem("request_id", col.value.request_id); navigate("singlepaymentrequestdetails") }} 
 						columnResizeMode={"expand"} resizableColumns={true} scrollable={true} paginator rows={5}>
 						{columns.map((col, i) => (
 
@@ -176,4 +173,4 @@ function PaymentRequests({ paymentRequestData, setReloade }) {
 	)
 }
 
-export default PaymentRequests
+export default DepositRequests

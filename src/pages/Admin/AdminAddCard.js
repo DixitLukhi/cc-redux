@@ -9,11 +9,13 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { Calendar } from 'primereact/calendar';
 import moment from 'moment';
+import { useDispatch } from 'react-redux';
+import { addAdminCard } from './adminSlice';
 
 function AdminAddCard() {
 
 	const navigate = useNavigate();
-	// const dispatch = useDispatch();
+	const dispatch = useDispatch();
 	const [cardPhotoUrl, setCardPhotoUrl] = useState("");
 	const [loading, setLoading] = useState(false);
 	const token = localStorage.getItem("Token");
@@ -56,8 +58,9 @@ function AdminAddCard() {
 		setLoading(true);
 		const requestObj = { ...values };
 		try {
-			const response = await axios.post(`${baseUrl}/api/cards/add-admin-card`, requestObj, { headers: header });
-
+			const response = await dispatch(addAdminCard(requestObj)).unwrap();
+			// const response = await axios.post(`${baseUrl}/api/cards/add-admin-card`, requestObj, { headers: header });
+			console.log(response.datas);
 			if (response.data.IsSuccess) {
 				toast.success(response.data.Message);
 				// toast.success(response.data.Message);

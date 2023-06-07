@@ -7,10 +7,12 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { editCardUser, editUserCard, getUserCardById } from './cardHolderSlice';
+import { useDispatch } from 'react-redux';
 
 export default function CardHolderEditCard() {
     const navigate = useNavigate();
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
     // const { state } = useLocation();
     // const { data } = state;
     const [loading, setLoading] = useState(true);
@@ -57,7 +59,8 @@ export default function CardHolderEditCard() {
 
     const getCardDetails = async () => {
         try {
-            const response = await axios.get(`${baseUrl}/api/cards/cards-list?card_id=${card_id}&user_id=${user_id}`, { headers: header });
+            const response = await dispatch(getUserCardById(card_id, user_id)).unwrap();
+            // const response = await axios.get(`${baseUrl}/api/cards/cards-list?card_id=${card_id}&user_id=${user_id}`, { headers: header });
             if (response.data.IsSuccess) {
                 setData(response.data.Data);
                 formik.setValues({
@@ -87,7 +90,8 @@ export default function CardHolderEditCard() {
         values.card_id = data.card_id;
         const requestObj = { ...values };
         try {
-            const response = await axios.patch(`${baseUrl}/api/cards/edit-user-card`, requestObj, { headers: header });
+            const response = dispatch(editCardUser(requestObj)).unwrap();
+            // const response = await axios.patch(`${baseUrl}/api/cards/edit-user-card`, requestObj, { headers: header });
 
             if (response.data.IsSuccess) {
                 toast.success(response.data.Message);

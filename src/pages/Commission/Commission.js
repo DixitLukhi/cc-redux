@@ -11,8 +11,11 @@ import { FilterMatchMode } from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import moment from 'moment/moment';
+import { useDispatch } from 'react-redux';
+import { getProfitRecords } from './commissionSlice';
 
 function Commission() {
+    const dispatch = useDispatch();
     const [commission, setCommission] = useState([]);
     const navigate = useNavigate();
 
@@ -24,10 +27,11 @@ function Commission() {
     }
     localStorage.removeItem("card_id");
     localStorage.removeItem("user_id");
-    localStorage.removeItem("request_id");
+    localStorage.removeItem("transaction_id");
     const getCommision = async () => {
         try {
-            const response = await axios.get(`${baseUrl}/api/transaction/all-payment-record-list?payment_status=True`, { headers: header });
+            const response = await dispatch(getProfitRecords()).unwrap();
+            // const response = await axios.get(`${baseUrl}/api/transaction/all-payment-record-list?payment_status=True`, { headers: header });
             if (response.data.IsSuccess) {
                 setCommission(response.data.Data);
                 setLoading(false);
@@ -136,14 +140,14 @@ function Commission() {
         {
             header: 'Profit (%)', field: (row) => {
                 return <div className="text-yankeesBlue text-lg font-semibold">
-                    {row.commission} %
+                    {row.profit ? row.profit + "%" : "-"} 
                 </div>
             }
         },
         {
             header: 'Charges', field: (row) => {
                 return <div className="text-yankeesBlue text-lg font-semibold">
-                    ₹ {row.charges}
+                    ₹ {row.deposit_charges + row.withdraw_charges}
                 </div>
             }
         },
@@ -159,7 +163,7 @@ function Commission() {
             header: 'Total Profit', field: (row) => {
                 return <div className="text-yankeesBlue text-lg font-semibold">
                     {/* ₹ {(row.due_amount + row.profit_amount).toFixed(2)} */}
-                    ₹ {(row.paid_amount + row.charges + ((row.paid_amount*row.commission)/100)).toFixed(2)}
+                    ₹ {row.total_amount}
                 </div>
             }
         },
@@ -219,7 +223,7 @@ function Commission() {
                 filters={filters}
 					globalFilterFields={['card.card_holder_name', 'card.card_number', 'card.card_bank_name', 'due_date']}
 					header={headerf}
-                    onSelectionChange={(col) => { localStorage.setItem("request_id", col.value.request_id); navigate("singleusercommissiondetails") }} columnResizeMode={"expand"} resizableColumns={true} scrollable={true} paginator rows={5}>
+                    onSelectionChange={(col) => { localStorage.setItem("transaction_id", col.value.transaction_id); navigate("singleusercommissiondetails") }} columnResizeMode={"expand"} resizableColumns={true} scrollable={true} paginator rows={5}>
                     {columns.map((col, i) => (
 
                         <Column key={col.field} field={col.field} header={col.header} />

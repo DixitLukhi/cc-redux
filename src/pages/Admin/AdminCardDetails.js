@@ -7,10 +7,13 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'react-toastify';
 import Modal from '../../common/Modals/Modal';
 import SinglePhotoView from '../../components/Popup/SinglePhotoView';
+import { useDispatch } from 'react-redux';
+import { getAdminCardByID } from './adminSlice';
 
 export default function AdminCardDetails() {
 	// const { state } = useLocation();
 	// const { data } = state;
+	const dispatch = useDispatch();
 	const [data, setData] = useState({});
 	const [id, setId] = useState();
 
@@ -27,7 +30,8 @@ export default function AdminCardDetails() {
 
 	const getCardDetails = async () => {
 		try {
-			const response = await axios.get(`${baseUrl}/api/cards/view-admin-card?card_id=${card_id}`, { headers: header });
+			const response = await dispatch(getAdminCardByID(card_id)).unwrap();
+			// const response = await axios.get(`${baseUrl}/api/cards/view-admin-card?card_id=${card_id}`, { headers: header });
 			if (response.data.IsSuccess) {
 				setData(response.data.Data);
 				setLoading(false);

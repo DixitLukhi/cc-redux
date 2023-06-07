@@ -6,9 +6,11 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { baseUrl } from '../../api/baseUrl';
+import { useDispatch, useSelector } from 'react-redux';
+import { verifyUser } from '../../pages/Cardholder/cardHolderSlice';
 function UserVerify({ handleClose }) {
 
-	// const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
 	const token = localStorage.getItem("Token");
 	const user_id = localStorage.getItem("user_id");
@@ -22,18 +24,19 @@ function UserVerify({ handleClose }) {
 		is_verified: "",
 	}
 
-
+	
 	const verify = async (values) => {
 		const requestObj = { ...values };
-		try {
-			const response = await axios.post(`${baseUrl}/api/user/verify-account`, { user_id: values.user_id, is_verified: values.is_verified }, { headers: header });
+		try {	
+			const response = await dispatch(verifyUser(requestObj)).unwrap();
+			// const response = await axios.post(`${baseUrl}/api/user/verify-account`, { user_id: values.user_id, is_verified: values.is_verified }, { headers: header });
 
 			if (response.data.IsSuccess) {
 				toast.success(response.data.Message);
 				// dispatch(increment());
 				setTimeout(() => {
 					handleClose(false);
-					window.location.reload();
+					// window.location.reload();
 				}, 1000);
 			} else {
 				toast.error(response.data.Message);

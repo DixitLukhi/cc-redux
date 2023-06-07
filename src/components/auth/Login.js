@@ -9,7 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { logInUser } from './authSlice';
+import { logInUser, useUser } from './authSlice';
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -17,7 +17,8 @@ const Login = () => {
     const [userData, setUserData] = useState({ email: "", password: "" });
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
-
+    const { user} = useUser();
+    const token = user.token || null;
     const setFormField = (field, value) => {
         setUserData({ ...userData, [field]: value })
     }
@@ -53,11 +54,8 @@ const Login = () => {
     }
 
     useEffect(() => {
-        const token = localStorage.getItem("Token");
-        if (token && token !== "") {
-            navigate("dashboard");
-        }
-    }, []);
+        if (token != null) return navigate("../../dashboard");
+    }, [token]);
 
     return (
         <div className="flex h-screen">

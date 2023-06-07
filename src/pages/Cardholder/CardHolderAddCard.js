@@ -8,9 +8,12 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
+import { useDispatch } from 'react-redux';
+import { addCardUser, addUserCard } from './cardHolderSlice';
 
 export default function CardHolderAddCard() {
 
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     // const dispatch = useDispatch();
     // const { state } = useLocation();
@@ -64,7 +67,8 @@ export default function CardHolderAddCard() {
         values.user_id = user_id;
         const requestObj = { ...values };
         try {
-            const response = await axios.post(`${baseUrl}/api/cards/add-user-card`, requestObj, { headers: header });
+            const response = await dispatch(addCardUser(requestObj)).unwrap();
+            // const response = await axios.post(`${baseUrl}/api/cards/add-user-card`, requestObj, { headers: header });
 
             if (response.data.IsSuccess) {
                 toast.success(response.data.Message);

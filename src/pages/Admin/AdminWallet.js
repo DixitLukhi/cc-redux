@@ -12,7 +12,12 @@ import moment from "moment/moment";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { useUser } from '../../components/auth/authSlice';
+import { deleteCard, getAdminCards } from './adminSlice';
+import { useDispatch } from 'react-redux';
+
 function AdminWallet() {
+    const dispatch = useDispatch();
     const [tab, setTab] = useState(1);
     const [listView, setListView] = useState(false);
     const navigate = useNavigate();
@@ -21,18 +26,18 @@ function AdminWallet() {
         'Authorization': `Bearer ${token}`,
     }
 
-    const [accountDetails, setAccountDetails] = useState({});
+    // const [accountDetails, setAccountDetails] = useState({});
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(true);
 
     let totalCreditBalance = 0;
     const [update, setUpdate] = useState(false);
     localStorage.removeItem("card_id");
-
+    const accountDetails = useUser();
     const getAccountDetails = async () => {
         try {
             const response = await axios.get(`${baseUrl}/api/user/admin-profile`, { headers: header });
-            setAccountDetails(response.data.Data);
+            // setAccountDetails(response.data.Data);
         } catch (error) {
             console.log(error);
         }
@@ -40,9 +45,11 @@ function AdminWallet() {
 
     const getCreditCards = async () => {
         try {
-            const response = await axios.get(`${baseUrl}/api/cards/view-admin-card`, {
-                headers: header,
-            });
+            const response = await dispatch(getAdminCards()).unwrap();
+            // const response = await axios.get(`${baseUrl}/api/cards/view-admin-card`, {
+            //     headers: header,
+            // });
+            console.log("c : ", response);
             if (response.data.IsSuccess) {
                 // toast.success(response.data.Message);
                 setCards(response.data.Data);
@@ -58,7 +65,8 @@ function AdminWallet() {
 
     const deleteCardHolder = async (id) => {
         try {
-            const response = await axios.delete(`${baseUrl}/api/cards/delete-admin-card?card_id=${id}`, { headers: header });
+            const response = await dispatch(deleteCard(id)).unwrap();
+            // const response = await axios.delete(`${baseUrl}/api/cards/delete-admin-card?card_id=${id}`, { headers: header });
             if (response.data.IsSuccess) {
                 setUpdate(!update);
                 toast.success(response.data.Message);
@@ -78,7 +86,7 @@ function AdminWallet() {
     }, [update]);
 
     useEffect(() => {
-        getAccountDetails();
+        // getAccountDetails();
     }, []);
 
     const columns = [

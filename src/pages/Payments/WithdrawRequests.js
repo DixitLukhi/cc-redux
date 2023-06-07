@@ -3,21 +3,21 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import DemoImage from "../../assets/images/profile.png"
 import axios from 'axios';
-import { baseUrl } from '../../api/baseUrl';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import Modal from '../../common/Modals/Modal';
-import PaymentDetails from '../../components/Popup/PaymentDetails';
 import { FilterMatchMode } from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-function PaymentRequests({ paymentRequestData, setReloade }) {
+import PaymentDetails from '../../components/Popup/PaymentDetails';
+
+function WithdrawRequests({ WithdrawData }) {
 
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(true);
-	const [paymentRequests, setPaymentRequests] = useState([]);
+	const [withdrawRequest, setWithdrawRequest] = useState([]);
 	const [isPayPopUpOpen, setIsPayPopUpOpen] = useState(false);
 	const [payerData, setPayerData] = useState({});
 	let totalDueAmount = 0;
@@ -28,12 +28,11 @@ function PaymentRequests({ paymentRequestData, setReloade }) {
 		'Authorization': `Bearer ${token}`,
 	}
 	const getPaymentRequests = () => {
-		setPaymentRequests((paymentRequestData).filter((request) => (request.payment_status === false) && request.payment_method !== "Withdraw" && request.payment_method !== "Cycle"));
+		setWithdrawRequest(WithdrawData.filter((request) => (request.payment_status === false) && request.payment_method === "Withdraw"));
+		
 		setLoading(false);
-
 	}
 	// paymentRequests.map((amount) => totalDueAmount += amount.due_amount);
-
 	useEffect(() => {
 		getPaymentRequests();
 	}, []);
@@ -53,15 +52,15 @@ function PaymentRequests({ paymentRequestData, setReloade }) {
 	};
 
 	const initFilters = () => {
-		setFilters({
-			global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-		});
-		setGlobalFilterValue('');
-	};
+        setFilters({
+            global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        });
+        setGlobalFilterValue('');
+    };
 
 	const clearFilter = () => {
-		initFilters();
-	};
+        initFilters();
+    };
 
 	const renderHeader = () => {
 		return (
@@ -71,7 +70,7 @@ function PaymentRequests({ paymentRequestData, setReloade }) {
 					<InputText className='bg-white' value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />
 				</span>
 				<div className='flex space-x-3 items-center'>
-					<Button type="button" icon="pi pi-filter-slash" label="Clear" onClick={clearFilter} />
+					<Button type="button" icon="pi pi-filter-slash" label="Clear" outlined onClick={clearFilter} />
 				</div>
 			</div>
 		);
@@ -85,7 +84,7 @@ function PaymentRequests({ paymentRequestData, setReloade }) {
 						<img src={DemoImage} alt="" className='w-full h-full overflow-hidden' />
 					</div> */}
 					{/* <div className="pl-4"> */}
-					<span className="text-lg font-bold text-[#2D3643] block">{row.card.card_holder_name}</span>
+						<span className="text-lg font-bold text-[#2D3643] block">{row.card.card_holder_name}</span>
 					{/* </div> */}
 				</div>
 			},
@@ -112,6 +111,7 @@ function PaymentRequests({ paymentRequestData, setReloade }) {
 				</div>
 			}
 		},
+
 		{
 			header: 'Bank Name', field: (row) => {
 				return <div className="text-lg font-semibold text-yankeesBlue">{row.card.card_bank_name}</div>
@@ -123,7 +123,7 @@ function PaymentRequests({ paymentRequestData, setReloade }) {
 			}
 		},
 		{
-			header: 'Total Due', field: (row) => {
+			header: 'Withdraw Amount', field: (row) => {
 				return <div className="text-lg font-semibold text-[#E52B2B]">
 					₹ {row.due_amount}
 				</div>
@@ -143,7 +143,7 @@ function PaymentRequests({ paymentRequestData, setReloade }) {
 		// },
 		{
 			header: '', field: (row) => {
-				return <div onClick={(e) => { e.stopPropagation(); setPayerData(row); setIsPayPopUpOpen(true); }} className="relative text-base font-semibold text-white inline-block bg-[#8FB50B] rounded-lg px-3 py-2">Pay</div>
+				return <div onClick={(e) => { e.stopPropagation(); setPayerData(row); setIsPayPopUpOpen(true); }} className="relative text-base font-semibold text-white inline-block bg-[#8FB50B] rounded-lg px-3 py-2">Withdraw</div>
 			}
 		},
 	];
@@ -153,27 +153,27 @@ function PaymentRequests({ paymentRequestData, setReloade }) {
 				<div className="flex items-center justify-center">
 					<ProgressSpinner style={{ width: '50px', height: '50px' }} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s" />
 				</div> :
-				paymentRequests.length > 0 ?
-					<DataTable className='relative' value={paymentRequests}
-						filters={filters}
-						globalFilterFields={['card.card_holder_name', 'card.card_number', 'card.card_bank_name', 'due_date']}
-						header={headerf}
-						selectionMode="single"
-						onSelectionChange={(col) => { localStorage.setItem("request_id", col.value.request_id); navigate("singlepaymentrequestdetails") }} 
-						columnResizeMode={"expand"} resizableColumns={true} scrollable={true} paginator rows={5}>
-						{columns.map((col, i) => (
+				withdrawRequest.length > 0 ?
+				<DataTable className='relative' value={withdrawRequest}
+					filters={filters}
+					globalFilterFields={['card.card_holder_name', 'card.card_number', 'card.card_bank_name', 'due_date']}
+					header={headerf}
+					// selectionMode="single"
+					// onSelectionChange={(col) => { localStorage.setItem("card_id", col.value.card_id); navigate("singlepaymentrequestdetails") }} 
+					columnResizeMode={"expand"} resizableColumns={true} scrollable={true} paginator rows={5}>
+					{columns.map((col, i) => (
 
-							<Column key={col.field} field={col.field} header={col.header} />
+						<Column key={col.field} field={col.field} header={col.header} />
 
-						))}
-					</DataTable>
-					: "No Payment Request found"
+					))}
+				</DataTable>
+				: "No Withdraw Request Found."
 			}
 			<Modal isOpen={isPayPopUpOpen}>
-				<PaymentDetails handleClose={setIsPayPopUpOpen} payerData={payerData} setReloade={setReloade} />
+				<PaymentDetails handleClose={setIsPayPopUpOpen} payerData={payerData} />
 			</Modal>
 		</>
 	)
 }
 
-export default PaymentRequests
+export default WithdrawRequests

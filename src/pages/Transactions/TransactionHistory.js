@@ -10,8 +10,12 @@ import moment from 'moment/moment';
 import { FilterMatchMode } from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
+import { useDispatch } from 'react-redux';
+import { getAllTransactions } from './transactionSlice';
 
 export default function TransactionHistory() {
+
+    const dispatch = useDispatch();
     const [transaction, setTransaction] = useState([]);
     const token = localStorage.getItem("Token");
     const [loading, setLoading] = useState(true);
@@ -24,7 +28,8 @@ export default function TransactionHistory() {
     }
     const getTransactions = async () => {
         try {
-            const response = await axios.get(`${baseUrl}/api/transaction/all-payment-record-list`, { headers: header });
+            const response = await dispatch(getAllTransactions()).unwrap();
+            // const response = await axios.get(`${baseUrl}/api/transaction/all-payment-record-list`, { headers: header });
             if (response.data.IsSuccess) {
                 // toast.success(response.data.Message);
                 setLoading(false);

@@ -1,11 +1,12 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import UseAuth from "./UseAuth";
 import Dashboard from "../../pages/Dashboard/Dashboard";
+import { useUser } from "./authSlice";
 
 const RequireAuth = () => {
-    const { auth } = UseAuth();
+    const { user } = useUser();
     const location = useLocation();
-    const token = localStorage.getItem("Token")
+    const token = user?.token;
     return (
         token
             ? <><Outlet /> </>

@@ -31,10 +31,10 @@ function AllRoutes() {
                     <Route path='verifyreset' element={<VerifyReset />} />
                     <Route path='resetpassword' element={<ResetPassword />} />
                     {/* </Route> */}
-                    {/* <Route element={<RequireAuth />}> */}
+                    <Route element={<RequireAuth />}>
 
                     <Route path="/*" element={<SideBar />} />
-                    {/* </Route> */}
+                    </Route>
                     <Route path="*"
                         element={<h1 style={{ color: "red", margin: "50px" }}>
                             404 | PAGE NOT FOUND

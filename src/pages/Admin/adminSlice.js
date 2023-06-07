@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
-import { editProfileDetails, profile } from "../../redux/services/paymentServices/adminServices";
+import { addCard, adminCard, adminCardById, deleteAdminCard, editCard, editProfileDetails, profile } from "../../redux/services/paymentServices/adminServices";
 
 const initialState = {
     profileDetails: {},
+    adminCards: []
 }
 
 export const getProfile = createAsyncThunk(
@@ -18,22 +19,61 @@ export const editProfile = createAsyncThunk(
     "admin/editProfile",
     async (payload) => {
         console.log("p : ", payload);
-      return await editProfileDetails(payload);
+        return await editProfileDetails(payload);
     }
-  );
+);
 
+export const getAdminCards = createAsyncThunk(
+    "admin/getAdminCards",
+    async () => {
+        return await adminCard();
+    }
+);
+
+export const getAdminCardByID = createAsyncThunk(
+    "admin/getAdminCardById",
+    async (cardId) => {
+        return await adminCardById(cardId);
+    }
+);
+
+export const addAdminCard = createAsyncThunk(
+    "admin/addAdminCard",
+    async (payload) => {
+        return await addCard(payload);
+    }
+);
+
+export const editAdminCard = createAsyncThunk(
+    "admin/editAdminCard",
+    async (payload) => {
+        return await editCard(payload);
+    }
+);
+
+export const deleteCard = createAsyncThunk( "admin/deleteCard",
+async (cardId) => {
+    return await deleteAdminCard(cardId);
+})
 const adminSlice = createSlice({
-    name : "adminSlice",
+    name: "adminSlice",
     initialState,
-    reducers : {},
-    extraReducers : (builder) => {
+    reducers: {},
+    extraReducers: (builder) => {
         builder.addCase(getProfile.fulfilled, (state, action) => {
-            console.log("hi", action.payload);
             state.profileDetails = action?.payload?.data?.Data;
         });
         builder.addCase(editProfile.fulfilled, (state, action) => {
             state.profileDetails = action?.payload?.data?.Data;
         });
+        builder.addCase(getAdminCards.fulfilled, (state, action) => {
+            console.log("state : ", state);
+            console.log("action : ", action.payload.data.Data);
+            state.adminCards = action?.payload?.data?.Data;
+        });
+        builder.addCase(addAdminCard.fulfilled, (state, action) => {
+            // state.adminCards.push(action.payload.data.Data) 
+        })
     }
 })
 

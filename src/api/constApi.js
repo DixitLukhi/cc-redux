@@ -15,12 +15,37 @@ export const GET_IN_TOUCH = "/landing/getintouch";
 export const BAR_DATA = "/api/transaction/profit-unpaidprofit-view?payment_status=True";
 export const PIE_DATA = "/api/transaction/paid-unpaid-withdraw";
 
+/* Commission */
+export const ALL_PAYMENT_RECORD_LIST_TRUE = "/api/transaction/all-payment-record-list?payment_status=True";
+export const PROFIT_RECORD_BY_ID = "api/transaction/all-payment-record-list?transaction_id=";
+
 /* PROFILE */
 export const PROFILE = "/api/user/admin-profile";
 export const EDIT_PROFILE = "/api/user/admin-edit-profile";
 export const PROFILE_PIC = "/organizer/profile/profilepic";
 export const BUSINESS_PROFILE = "/organizer/profile/businessprofile";
 export const BUSINESS_PROFILE_PIC = "/organizer/profile/businessprofilepic";
+
+/* CARD HOLDER */
+export const USER_LIST = "/api/user/user-list";
+export const USER_BY_ID = "/api/user/user-list?id=";
+export const CREATE_ACCOUNT = "/api/user/create-account";
+export const VERIFY_ACCOUNT = "/api/user/verify-account";
+export const EDIT_ACCOUNT = "/api/user/edit-user-profile";
+export const CARD_LIST = "/api/cards/cards-list?user_id=";
+export const ADD_USER_CARD = "/api/cards/add-user-card";
+export const EDIT_USER_CARD = "/api/cards/edit-user-card";
+export const USER_CARD_BY_ID = "/api/cards/cards-list?card_id=";
+
+/* ADMIN */
+export const VIEW_ADMIN_CARD = "/api/cards/view-admin-card";
+export const VIEW_ADMIN_CARD_BY_ID = "/api/cards/view-admin-card?card_id=";
+export const DELETE_ADMIN_CARD = "/api/cards/delete-admin-card?card_id=";
+export const ADD_ADMIN_CARD = "/api/cards/add-admin-card";
+export const EDIT_ADMIN_CARD = "/api/cards/edit-admin-card";
+
+/* TRANSACTION */
+export const ALL_PAYMENT_RECORD_LIST = "/api/transaction/all-payment-record-list"; 
 
 /* DASHBOARD EVENT */
 export const GET_CATEGORY = "/organizer/events/listcategory?event_type=";

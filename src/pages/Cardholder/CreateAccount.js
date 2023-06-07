@@ -5,9 +5,12 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { createAccount } from './cardHolderSlice';
 
 function CreateAccount() {
 
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	// const dispatch = useDispatch();
 
@@ -58,8 +61,9 @@ function CreateAccount() {
 		setLoading(true);
 		const requestObj = { ...values };
 		try {
-			const response = await axios.post(`${baseUrl}/api/user/create-account`, requestObj, { headers: header });
-
+			const response = await dispatch(createAccount(requestObj)).unwrap();
+			// const response = await axios.post(`${baseUrl}/api/user/create-account`, requestObj, { headers: header });
+			
 			if (response.data.IsSuccess) {
 				toast.success(response.data.Message);
 				// dispatch(increment());

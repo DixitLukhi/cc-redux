@@ -100,7 +100,6 @@ export default function Dashboard() {
   const getDashboardData = async () => {
     try {
       const response = await dispatch(getBarData()).unwrap();
-      console.log("bar : ");
       // const response = await axios.get( `${baseUrl}/api/transaction/profit-unpaidprofit-view?payment_status=True`, { headers: header });
       if (response.data.Data) {
         // setUnpaidAmt(calcUnpaidAmt(response.data.Data))

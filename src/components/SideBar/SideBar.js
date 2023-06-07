@@ -44,6 +44,7 @@ import AdminCardDetails from "../../pages/Admin/AdminCardDetails";
 import AdminEditCard from "../../pages/Admin/AdminEditCard";
 import { useDispatch, useSelector } from "react-redux";
 import { getProfile, useProfile } from "../../pages/Admin/adminSlice";
+import { removeToken } from "../auth/authSlice";
 
 function SideBar() {
   const navigate = useNavigate();
@@ -81,6 +82,7 @@ function SideBar() {
 
   const logout = () => {
     navigate("./");
+    dispatch(removeToken());
     localStorage.clear();
   };
 
@@ -522,7 +524,7 @@ function SideBar() {
                         />
                       </div>
                       <span className="hidden sm:block text-left max-w-[120px] min-w-[120px] w-full text-sm font-bold leading-5 text-[#1E293B] ml-3 truncate">
-                        {profile?.first_name + " " + profile?.last_name}
+                        {(profile?.first_name ? profile?.first_name : "") + " " + (profile?.last_name ? profile?.last_name : "")}
                       </span>
                     </div>
                     <img

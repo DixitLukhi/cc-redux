@@ -19,11 +19,14 @@ import Modal from '../../common/Modals/Modal';
 import SinglePhotoView from '../../components/Popup/SinglePhotoView';
 import CreateAccount from './CreateAccount';
 import { useBarData } from '../Dashboard/dashboardSlice';
+import { useDispatch } from 'react-redux';
+import { getUserList } from './cardHolderSlice';
 
 function CardHolderList() {
 	// const [products, setProducts] = useState([]);
 	// const [multiSortMeta, setMultiSortMeta] = useState([{ field: 'category', order: -1 }]);
 	// const productService = new ProductService();
+	const dispatch = useDispatch();
 	const [users, setUsers] = useState([]);
 	const [totalCardHolders, setTotalCardHolders] = useState(0);
 	const [loading, setLoading] = useState(true);
@@ -48,7 +51,8 @@ function CardHolderList() {
 	}
 	const getCardHolderList = async () => {
 		try {
-			const response = await axios.get(`${baseUrl}/api/user/user-list`, { headers: header });
+			const response = await dispatch(getUserList()).unwrap();
+			// const response = await axios.get(`${baseUrl}/api/user/user-list`, { headers: header });
 			if (response.data.IsSuccess) {
 				setTotalCardHolders(response.data.Data.length);
 				setCardHolders(response.data.Data);

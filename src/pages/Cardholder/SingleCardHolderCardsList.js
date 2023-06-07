@@ -13,9 +13,12 @@ import creditCard from "../../assets/images/credit-card.png"
 import moment from 'moment/moment';
 import Modal from '../../common/Modals/Modal';
 import CardHolderDueAmount from '../../components/Popup/CardHolderDueAmount';
+import { useDispatch } from 'react-redux';
+import { getCards, getUser } from './cardHolderSlice';
 export default function SingleCardHolderCardsList() {
     // const { state } = useLocation();
     // const { data } = state;
+    const dispatch = useDispatch();
     const [loading1, setLoading1] = useState(true);
     const [dueAmountPop, setDueAmountPop] = useState(false);
     const [loading2, setLoading2] = useState(true);
@@ -36,7 +39,8 @@ export default function SingleCardHolderCardsList() {
 
     const getUserProfile = async () => {
         try {
-            const response = await axios.get(`${baseUrl}/api/user/user-list?id=${user_id}`, { headers: header });
+            const response = await dispatch(getUser(user_id)).unwrap();
+            // const response = await axios.get(`${baseUrl}/api/user/user-list?id=${user_id}`, { headers: header });
             if (response.data.IsSuccess) {
                 setUserData(response.data.Data[0]);
                 setLoading1(false);
@@ -51,7 +55,8 @@ export default function SingleCardHolderCardsList() {
 
     const getUserCards = async () => {
         try {
-            const response = await axios.get(`${baseUrl}/api/cards/cards-list?user_id=${user_id}`, { headers: header });
+            const response = await dispatch(getCards(user_id)).unwrap();
+            // const response = await axios.get(`${baseUrl}/api/cards/cards-list?user_id=${user_id}`, { headers: header });
             if (response.data.IsSuccess) {
                 // toast.success(response.data.Message);
                 setListCards(response.data.Data);

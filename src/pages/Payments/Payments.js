@@ -1,26 +1,29 @@
 import React, { useEffect, useState } from 'react'
-import PaymentPaid from './PaymentPaid';
-import PaymentRequests from './PaymentRequests';
+import CycleRequests from './CycleRequests';
+import DepositRequests from './DepositRequests';
 import Modal from '../../common/Modals/Modal';
-import PaymentDetails from '../../components/Popup/PaymentDetails';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { baseUrl } from '../../api/baseUrl';
 import { ToastContainer, toast } from 'react-toastify';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import Withdraw from './Withdraw';
+import WithdrawRequests from './WithdrawRequests';
+import { baseUrl } from '../../api/baseUrl';
 
 function Payments() {
-    const [tab, setTab] = useState(1);
-
+    
     const navigate = useNavigate();
+    const location = useLocation();
     const [loading, setLoading] = useState(true);
     const [paymentRequests, setPaymentRequests] = useState([]);
     const [isPayPopUpOpen, setIsPayPopUpOpen] = useState(false);
     const [payerData, setPayerData] = useState({});
-    const [reload, setReloade] = useState(false);
+    const [reload, setReload] = useState(false);
     let totalDueAmount = 0;
-
+    let totalWithdrawAmount = 0;
+    console.log("loc : ", location?.state?.paymentMethod);
+    const [tab, setTab] = useState(location?.state?.paymentMethod ? (location?.state?.paymentMethod === "Deposit" ? 1 : 
+    location?.state?.paymentMethod === "Cycle" ? 2 : 3) : 1
+    );
     const token = localStorage.getItem("Token");
     localStorage.removeItem("card_id");
     localStorage.removeItem("user_id");
@@ -39,15 +42,36 @@ function Payments() {
             } else {
                 toast.error("Something went wrong!!");
             }
+            setLoading(false);
         } catch (error) {
             toast.error("Something went wrong!!");
             console.log(error);
+            setLoading(false);
         }
     }
-    paymentRequests.map((amount) => totalDueAmount += amount.due_amount);
+
+    
+    paymentRequests.map((item) => 
+    {
+        if(item.payment_method ==="Deposit" ){
+            totalDueAmount += item.due_amount
+        }
+        if(item.payment_method ==="Withdraw" ){
+            totalWithdrawAmount += item.due_amount
+        }
+        if (item.payment_method ==="Cycle" && !item.cycle_deposit_status) {
+            totalDueAmount += item.due_amount
+        }
+
+        if (item.payment_method ==="Cycle" && item.cycle_deposit_status) {
+            totalWithdrawAmount += item.due_amount
+        }
+    }
+    );
 
     useEffect(() => {
         getPaymentRequests();
+
     }, [reload]);
     return (
         <>
@@ -62,18 +86,19 @@ function Payments() {
                                 <div className="bg-[#e52b2b14] py-7 px-7 2xl::px-11 rounded-xl h-full border border-[#CBD5E1]">
                                     <h2 className="text-[#E52B2B] mb-3">₹ {totalDueAmount}</h2>
                                     <span className="text-[#64748B]  text-2xl:text-base xl font-semibold">
-                                        Total Due Amount
+                                        Total Due Request Amount
                                     </span>
                                 </div>
                             </div>
                             <div className="w-full md:w-1/2 xl:w-1/4 p-3 2xl:px-5">
-                                <div className="bg-white py-7 px-7 2xl::px-11 rounded-xl h-full border border-[#CBD5E1]">
-                                    <h2 className="text-[#E52B2B] mb-3">₹ 0</h2>
+                                <div className="bg-[#F3F4F6] py-7 px-7 2xl::px-11 rounded-xl h-full border border-[#CBD5E1]">
+                                    <h2 className="text-darkGreen  mb-3">₹ {totalWithdrawAmount}</h2>
                                     <span className="text-[#64748B]  text-2xl:text-base xl font-semibold">
-                                        Total Payment Paid
+                                        Total Withdraw Request Amount
                                     </span>
                                 </div>
                             </div>
+                           
                         </div>
                         <div className="relative md:flex items-center justify-between mb-10">
                             {/* <h3 className="text-yankeesBlue leading-8 space-x-3">
@@ -98,9 +123,9 @@ function Payments() {
                                 </div>
                             </div> */}
                         </div>
-                        {tab === 1 && <PaymentRequests paymentRequestData={paymentRequests} setReloade={setReloade}/>}
-                        {tab === 2 && <PaymentPaid paymentPaidData={paymentRequests} setReloade={setReloade}/>}
-                        {tab === 3 && <Withdraw WithdrawData={paymentRequests} setReloade={setReloade}/>}
+                        {tab === 1 && <DepositRequests paymentRequestData={paymentRequests} setReloade={setReload}/>}
+                        {tab === 2 && <CycleRequests paymentPaidData={paymentRequests} setReloade={setReload}/>}
+                        {tab === 3 && <WithdrawRequests WithdrawData={paymentRequests} setReloade={setReload}/>}
                         <ToastContainer
                             position="bottom-right"
                             autoClose={5000}
