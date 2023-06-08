@@ -54,8 +54,6 @@ function AdminAccountDetails() {
 
         try {
             const response = await dispatch(editProfile(formData)).unwrap();
-            // const response = await axios.patch(`${baseUrl}/api/user/admin-edit-profile`, formData, { headers: header })
-            // const response = await dispatch(addProfileImage(formData)).unwrap();
             if (response?.data?.IsSuccess) {
                 // window.location.reload();
                 // alert("Profile image Updated Successful")
@@ -102,9 +100,7 @@ function AdminAccountDetails() {
             const payload = Object.assign({}, values);
             const response = await dispatch(editProfile(payload)).unwrap();
 
-            // const response = await axios.patch(`${baseUrl}/api/user/admin-edit-profile`, values, { headers: header });
             if (response.data.IsSuccess) {
-                // window.location.reload();
                 toast.success(response.data.Message);
             } else {
                 toast.error(response.data.Message);
@@ -126,18 +122,6 @@ function AdminAccountDetails() {
         getAccountDetails();
     }, [profileImage]);
 
-    // let initialRender = true;
-    // useEffect(() => {
-    //     if (initialRender) {
-    //         initialRender = false;
-    //     } else {
-    //         if (!isDisable) {
-    //             toast.info("Edit Profile Enable.")
-    //         } else {
-    //             toast.info("Edit Profile Disable.")
-    //         }
-    //     }
-    // }, [isDisable]);
     return (
         <div className="wrapper min-h-full relative">
             {loading ?
@@ -163,38 +147,16 @@ function AdminAccountDetails() {
                             <button className="btn-secondary flex mr-3" onClick={() => { addPersonalDetails(); setIsDisable(true) }}>Save</button>
                             <button className="btn-secondary flex" onClick={() => setIsDisable(true)}>Cancel</button>
                         </div>}
-                        {/* <div className="flex space-x-3">
-					<Link to='createaccount' className="btn-secondary flex">
-						<svg className='mr-3' width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M8.6 1.6C8.6 1.26863 8.33137 1 8 1C7.66863 1 7.4 1.26863 7.4 1.6L7.4 7.4H1.6C1.26863 7.4 1 7.66863 1 8C1 8.33137 1.26863 8.6 1.6 8.6H7.4V14.4C7.4 14.7314 7.66863 15 8 15C8.33137 15 8.6 14.7314 8.6 14.4V8.6H14.4C14.7314 8.6 15 8.33137 15 8C15 7.66863 14.7314 7.4 14.4 7.4H8.6L8.6 1.6Z" fill="white" stroke="white" strokeLinecap="round" />
-						</svg>
-						Edit Details
-					</Link> */}
-                        {/* <Link to='../dashboard/adminaddcard' className="btn-secondary flex">
-						<svg className='mr-3' width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M8.6 1.6C8.6 1.26863 8.33137 1 8 1C7.66863 1 7.4 1.26863 7.4 1.6L7.4 7.4H1.6C1.26863 7.4 1 7.66863 1 8C1 8.33137 1.26863 8.6 1.6 8.6H7.4V14.4C7.4 14.7314 7.66863 15 8 15C8.33137 15 8.6 14.7314 8.6 14.4V8.6H14.4C14.7314 8.6 15 8.33137 15 8C15 7.66863 14.7314 7.4 14.4 7.4H8.6L8.6 1.6Z" fill="white" stroke="white" strokeLinecap="round" />
-						</svg>
-						Add Card
-					</Link> */}
-                        {/* </div> */}
                     </div>
                     <div className="pt-8 sm:pt-[50px]">
                         <div className="flex items-center justify-center pb-8 sm:pb-[50px]">
                             <div className="w-44 h-44 rounded-full border-8 border-spiroDiscoBall bg-[#E2E8F0] relative mr-9 max-[600px]:mr-0">
                                 <img
-                                    // src={
-                                    // 	profileImage
-                                    // 		? URL.createObjectURL(profileImage)
-                                    // 		: details?.profile_pic
-                                    // 			? details?.s3Url + details?.profile_pic
-                                    // 			: previewImage
-                                    // }
                                     src={details?.profile_pic && details?.profile_pic !== "" ? details?.profile_pic : PreviewImage}
                                     alt="pictures"
                                     className="w-full h-full object-cover object-top rounded-full overflow-hidden"
                                 />
                                 <div className="absolute bottom-0 right-0 flex justify-center items-center border-[2px] border-white w-10 h-10 rounded-full bg-[#E2E8F0] z-10">
-                                    {/* <i className="icon-camera"></i> */}
                                     <img src={ProfileIcon} alt="Alt Text" className='w-full h-full object-cover rounded-full overflow-hidden p-1' />
                                     <input
                                         type="file"

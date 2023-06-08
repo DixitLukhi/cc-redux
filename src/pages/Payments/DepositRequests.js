@@ -9,6 +9,7 @@ import { FilterMatchMode } from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import PaymentDetails from '../../components/Popup/PaymentDetails';
+import DepositPaymentDetails from '../../components/Popup/DepositPaymentDetails';
 function DepositRequests({ paymentRequestData, setReloade }) {
 
 	const navigate = useNavigate();
@@ -25,12 +26,10 @@ function DepositRequests({ paymentRequestData, setReloade }) {
 	}
 	const getPaymentRequests = () => {
 
-		setPaymentRequests((paymentRequestData).filter((request) => (request.payment_status === false) && request.payment_method==="Deposit"));
+		setPaymentRequests((paymentRequestData).filter((request) => (request.payment_status === false) && request.payment_method === "Deposit"));
 		setLoading(false);
 
 	}
-	// paymentRequests.map((amount) => totalDueAmount += amount.due_amount);
-
 	useEffect(() => {
 		getPaymentRequests();
 	}, []);
@@ -78,10 +77,6 @@ function DepositRequests({ paymentRequestData, setReloade }) {
 		{
 			header: 'Holder Name', field: (row) => {
 				return <div className="flex items-center">
-					{/* <div className="w-12 h-12 rounded-full overflow-hidden">
-						<img src={DemoImage} alt="" className='w-full h-full overflow-hidden' />
-					</div> */}
-					{/* <div className="pl-4"> */}
 					<span className="text-lg font-bold text-[#2D3643] block">{row.card.card_holder_name}</span>
 					{/* </div> */}
 				</div>
@@ -133,11 +128,6 @@ function DepositRequests({ paymentRequestData, setReloade }) {
 				</div>
 			}
 		},
-		// {
-		// 	header: 'Payment Method', field: (row) => {
-		// 		return <div className="text-lg font-semibold text-yankeesBlue">{row.payment_method}</div>
-		// 	}
-		// },
 		{
 			header: '', field: (row) => {
 				return <div onClick={(e) => { e.stopPropagation(); setPayerData(row); setIsPayPopUpOpen(true); }} className="relative text-base font-semibold text-white inline-block bg-[#8FB50B] rounded-lg px-3 py-2">Pay</div>
@@ -167,7 +157,7 @@ function DepositRequests({ paymentRequestData, setReloade }) {
 					: "No Payment Request found"
 			}
 			<Modal isOpen={isPayPopUpOpen}>
-				<PaymentDetails handleClose={setIsPayPopUpOpen} payerData={payerData} setReloade={setReloade} />
+				<DepositPaymentDetails handleClose={setIsPayPopUpOpen} payerData={payerData} setReloade={setReloade} />
 			</Modal>
 		</>
 	)

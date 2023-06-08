@@ -26,8 +26,6 @@ function ForgotPassword() {
         try {
             const payload = { email: userData.email };
             const response = await dispatch(forgotPass(payload)).unwrap();
-            // const response = await axios.post(`${baseUrl}/api/user/reset-password-email`, { email: userData.email });
-
             if (response.data.IsSuccess) {
                 toast.success(response.data.Message);
                 setTimeout(() => {

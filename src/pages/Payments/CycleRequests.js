@@ -13,6 +13,7 @@ import { Button } from 'primereact/button';
 import moment from 'moment/moment';
 import { classNames } from 'primereact/utils';
 import PaymentDetails from '../../components/Popup/PaymentDetails';
+import DepositPaymentDetails from '../../components/Popup/DepositPaymentDetails';
 
 function CycleRequests({ paymentPaidData, setReloade }) {
     const navigate = useNavigate();
@@ -77,9 +78,6 @@ function CycleRequests({ paymentPaidData, setReloade }) {
         {
             header: 'Holder Name', field: (row) => {
                 return <div className="flex">
-                    {/* <div className="w-12 h-12 rounded-full overflow-hidden">
-                        <img src={DemoImage} alt="" className='w-full h-full overflow-hidden' />
-                    </div> */}
                     <div className="">
                         <span className="text-lg font-bold text-[#2D3643] block">{row.card.card_holder_name}</span>
                     </div>
@@ -167,7 +165,7 @@ function CycleRequests({ paymentPaidData, setReloade }) {
                     : "No Payment Done."
             }
             <Modal isOpen={isPayPopUpOpen}>
-                <PaymentDetails handleClose={setIsPayPopUpOpen} payerData={payerData} setReloade={setReloade} />
+                <DepositPaymentDetails handleClose={setIsPayPopUpOpen} payerData={payerData} setReloade={setReloade} />
             </Modal>
         </>)
 }

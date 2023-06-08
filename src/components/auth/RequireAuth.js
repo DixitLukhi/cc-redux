@@ -13,7 +13,6 @@ const RequireAuth = () => {
             :
             <>
                 <Navigate to="../" state={{ from: location }} replace />
-                {/* <Dashboard /> */}
             </>
     );
 }

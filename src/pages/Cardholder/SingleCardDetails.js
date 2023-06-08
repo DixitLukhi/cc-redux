@@ -11,10 +11,12 @@ import DemoImage from "../../assets/images/profile.png";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import PaymentDetails from '../../components/Popup/PaymentDetails';
+import { useDispatch } from 'react-redux';
+import { userCardById } from '../../redux/services/paymentServices/cardHolderServices';
+import { getPaymentListById, getUserCardById } from './cardHolderSlice';
 
 export default function SingleCardDetails() {
-	// const { state } = useLocation();
-	// const { data } = state;
+	const dispatch = useDispatch();
 	const [data, setData] = useState({});
 	const token = localStorage.getItem("Token");
 	const navigate = useNavigate();
@@ -33,10 +35,7 @@ export default function SingleCardDetails() {
 	};
 	const getRequestDeails = async () => {
 		try {
-			const response = await axios.get(
-				`${baseUrl}/api/paymentRequest/payment-request-list?card_id=${card_id}`,
-				{ headers: header }
-			);
+			const response = await dispatch(getPaymentListById(card_id)).unwrap();
 			if (response.data.IsSuccess) {
 				setRequestDetails(response.data.Data);
 				setLoading(false);
@@ -50,10 +49,7 @@ export default function SingleCardDetails() {
 	requestDetails.map((r, i) => <div key={i}>{totalDueAmount += r.due_amount}</div>)
 	const getCardDetails = async () => {
 		try {
-			const response = await axios.get(
-				`${baseUrl}/api/cards/cards-list?card_id=${card_id}`,
-				{ headers: header }
-			);
+			const response = await dispatch(getUserCardById(card_id)).unwrap();
 			if (response.data.IsSuccess) {
 				setCardDetails(response.data.Data);
 				setLoading(false);
@@ -71,25 +67,6 @@ export default function SingleCardDetails() {
 	}, []);
 
 	const columns = [
-		// {
-		// 	header: 'Holder Name', field: (row) => {
-		// 		return <div className="flex items-center">
-		// 			{/* <div className="w-12 h-12 rounded-full overflow-hidden">
-		// 				<img src={DemoImage} alt="" className='w-full h-full overflow-hidden' />
-		// 			</div> */}
-		// 			{/* <div className="pl-4"> */}
-		// 				<span className="text-lg font-bold text-[#2D3643] block">{row.card.card_holder_name}</span>
-		// 			{/* </div> */}
-		// 		</div>
-		// 	},
-		// },
-		// {
-		// 	header: 'Card', field: (row) => {
-		// 		return <div className="text-lg font-semibold text-yankeesBlue">
-		// 			********{(row.card.card_number).toString().substr(-4)}
-		// 		</div>
-		// 	}
-		// },
 		{
 			header: 'Category', field: (row) => {
 
@@ -105,17 +82,10 @@ export default function SingleCardDetails() {
 				</div>
 			}
 		},
-		// {
-		// 	header: 'Bank Name', field: (row) => {
-		// 		return <div className="text-lg font-semibold text-yankeesBlue">{row.card.card_bank_name}</div>
-		// 	}
-		// },
 		{
 			header: 'Status', field: (row) => {
 				return <>{row.payment_status === false ? <div className="text-xs inline-block font-semibold text-[#F6A351] bg-[#FFF0E0] rounded-lg px-3 py-2">Unpaid</div> : <div className="text-xs inline-block font-semibold text-[#097C69] bg-[#E2F8F5] rounded-lg px-3 py-2">Paid</div>
 				}
-					{/* <div className="text-xs inline-block font-semibold text-[#097C69] bg-[#E2F8F5] rounded-lg px-3 py-2">Paid</div> */}
-					{/* div className="text-xs font-semibold text-[#F6A351] bg-[#FFF0E0] rounded-lg px-3 py-2">Pending</div> //pending box */}
 				</>
 			}
 		},
@@ -201,7 +171,7 @@ export default function SingleCardDetails() {
 									</svg>
 									Edit Details
 								</button>
-								<button to='createaccount' className="btn-secondary flex" onClick={() => { setId(cardDetails.card_photo); setIsPhotoViewPopUpOpen(true); }}>View Card Photo</button>
+								<button to='createaccount' className="btn-secondary flex" onClick={() => { setId(cardDetails); setIsPhotoViewPopUpOpen(true); }}>View Card Photo</button>
 							</div>
 							{/* </div> */}
 						</div>
@@ -248,16 +218,6 @@ export default function SingleCardDetails() {
 									</span>
 								</div>
 							</div>
-							{/* <div className="w-full md:w-1/2 xl:w-1/4 p-3 2xl:px-5">
-								<div className="bg-white border border-[#CBD5E1] py-7 px-7 2xl::px-11 rounded-xl h-full">
-									<h2 className="text-yankeesBlue mb-3">
-										{moment(cardDetails.due_date).format("ll")}
-									</h2>
-									<span className="text-[#64748B] text-base 2xl:text-xl font-semibold">
-										Due Date
-									</span>
-								</div>
-							</div> */}
 						</div>
 						{requestDetails.length > 0 ?
 							<div className="card">

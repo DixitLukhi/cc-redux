@@ -26,7 +26,6 @@ function AdminWallet() {
         'Authorization': `Bearer ${token}`,
     }
 
-    // const [accountDetails, setAccountDetails] = useState({});
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -37,7 +36,6 @@ function AdminWallet() {
     const getAccountDetails = async () => {
         try {
             const response = await axios.get(`${baseUrl}/api/user/admin-profile`, { headers: header });
-            // setAccountDetails(response.data.Data);
         } catch (error) {
             console.log(error);
         }
@@ -49,9 +47,7 @@ function AdminWallet() {
             // const response = await axios.get(`${baseUrl}/api/cards/view-admin-card`, {
             //     headers: header,
             // });
-            console.log("c : ", response);
             if (response.data.IsSuccess) {
-                // toast.success(response.data.Message);
                 setCards(response.data.Data);
                 setLoading(false);
             } else {
@@ -86,7 +82,6 @@ function AdminWallet() {
     }, [update]);
 
     useEffect(() => {
-        // getAccountDetails();
     }, []);
 
     const columns = [
@@ -250,16 +245,6 @@ function AdminWallet() {
                     </div>
                 </div>
             </div>
-            {/* <div className="flex border-b-2 border-b-[#D7DFE9]">
-                <div className="ml-3 xsm:ml-8 md:ml-14 space-x-1">
-                    <button type="button" className={"inline-block font-extrabold text-sm sm:text-base px-3 sm:px-8 py-2 " + (tab === 1 ? "text-yankeesBlue  border-[#D7DFE9] rounded-tr-xl rounded-tl-xl translate-y-[2px] border-2 border-b-white" : "text-lightGray translate-y-[2px] border-transparent border-2")} data-tab="creditcard" onClick={() => setTab(1)}>Credit Card</button>
-                    <button type="button" className={"inline-block font-extrabold text-sm sm:text-base px-3 sm:px-8 py-2 " + (tab === 2 ? "text-yankeesBlue  border-[#D7DFE9] rounded-tr-xl rounded-tl-xl translate-y-[2px]  border-2 border-b-white" : "text-lightGray translate-y-[2px] border-transparent border-2")} data-tab="Debitcard" onClick={() => setTab(2)}>Debit Card</button>
-                </div>
-            </div> */}
-            {/* <div className='relative'> */}
-            {/* {tab === 1 && <AdminCreditCards list={listView} />} */}
-            {/* {tab === 2 && <AdminDebitCards list={listView} />} */}
-            {/* </div> */}
             {loading ? (
                 <div className="flex items-center justify-center pt-5">
                     <ProgressSpinner
@@ -280,55 +265,43 @@ function AdminWallet() {
                                 </span>
                             </div>
                         </div>
-                        {/* <div className="w-full md:w-1/2 xl:w-1/4 p-3 2xl:px-5">
-              <div className="bg-lightWhite py-7 px-7 2xl::px-11 rounded-xl h-full border border-[#CBD5E1]">
-                <h2 className="text-yankeesBlue mb-3">₹ 20,000</h2>
-                <span className="text-[#64748B]  text-2xl:text-base xl font-semibold">
-                  Total Unpaid Profit Amount
-                </span>
-              </div>
-            </div> */}
                     </div>
                     {cards.length > 0 ? <>
-                    {!listView ?(
-                        <>
-                            {/* List View  */}
-                            <div className="mt-9">
-                                {/* <DataTable value={listCreditCard}>
-                        {columns.map((col, i) => (
-                            <Column key={col.field} field={col.field} header={col.header} />
-                        ))}
-                    </DataTable> */}
-                                <DataTable
-                                    value={cards}
-                                    columnResizeMode={"expand"}
-                                    resizableColumns={true}
-                                    scrollable={true}
-                                    paginator
-                                    rows={5}
-                                    selectionMode="single"
-                                    onSelectionChange={(col) => {
-                                        localStorage.setItem("card_id", col.value.card_id);
-                                        navigate("../admincarddetails");
-                                    }}
-                                >
-                                    {columns.map((col, i) => (
-                                        <Column
-                                            key={col.field}
-                                            field={col.field}
-                                            header={col.header}
-                                        />
-                                    ))}
-                                </DataTable>
-                            </div>
-                        </>
-                    )
-                        : (
+                        {!listView ? (
                             <>
-                                {/* Card View  */}
-                                <div className="flex justify-start flex-wrap mt-5 md:mt-9">
-                                    
-                                    {    cards.map((card, i) => (
+                                {/* List View  */}
+                                <div className="mt-9">
+
+                                    <DataTable
+                                        value={cards}
+                                        columnResizeMode={"expand"}
+                                        resizableColumns={true}
+                                        scrollable={true}
+                                        paginator
+                                        rows={5}
+                                        selectionMode="single"
+                                        onSelectionChange={(col) => {
+                                            localStorage.setItem("card_id", col.value.card_id);
+                                            navigate("../admincarddetails");
+                                        }}
+                                    >
+                                        {columns.map((col, i) => (
+                                            <Column
+                                                key={col.field}
+                                                field={col.field}
+                                                header={col.header}
+                                            />
+                                        ))}
+                                    </DataTable>
+                                </div>
+                            </>
+                        )
+                            : (
+                                <>
+                                    {/* Card View  */}
+                                    <div className="flex justify-start flex-wrap mt-5 md:mt-9">
+
+                                        {cards.map((card, i) => (
                                             <div
                                                 key={i}
                                                 className="relative w-full md:w-1/2 xl:w-1/3 cursor-pointer overflow-hidden sm:px-3 2xl:mb-4 mb-4"
@@ -392,10 +365,10 @@ function AdminWallet() {
                                                 </div>
                                             </div>
                                         ))
-                                    }
-                                </div>
-                            </>
-                        )} </> : <div className="flex items-center justify-center">
+                                        }
+                                    </div>
+                                </>
+                            )} </> : <div className="flex items-center justify-center">
                         <div className="flex items-center justify-center flex-col">
                             <img
                                 src={creditCard}

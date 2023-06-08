@@ -1,6 +1,6 @@
 import React from 'react'
 import AllRoutes from './routes/AllRoutes';
-import "react-toastify/dist/ReactToastify.css"; 
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (

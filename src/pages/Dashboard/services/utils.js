@@ -50,7 +50,7 @@ export function calculateMonthlyTotalPaid(first, m) {
 }
 
 export function calculateDailyTotalPaid(first, d) {
-    
+
     let totalPaid = 0;
     let day = new Date(d).getDate();
     let month = new Date(d).getMonth();
@@ -59,7 +59,7 @@ export function calculateDailyTotalPaid(first, d) {
         let fDay = new Date(moment(data.due_paid_at).format('L')).getDate();
         let fMonth = new Date(moment(data.due_paid_at).format('L')).getMonth();
         let fYear = new Date(moment(data.due_paid_at).format('L')).getFullYear();
-        return (    
+        return (
             ((fDay === day) && (fMonth === month) && (fYear === year))
         )
     });
@@ -95,7 +95,7 @@ export function calcMonthlyUnpaidAmt(paymentData, m) {
 
     paymentData.map(record => {
         let fmonth = new Date(moment(record.paid_amount.due_paid_at).format('L')).getMonth();
-        
+
         if ((record.payment_method === "Deposit" || (record.payment_method === "Cycle" && record.payment_method_flag === "Cycle Deposit")) && (fmonth === month)) {
             let total = 0
             record.paid_amount.map(paid => (
@@ -130,24 +130,6 @@ export function calcTotalProfitAmt(paymentData) {
     return totalProfitAmt
 }
 
-// export function calcMonthlyTotalProfitAmt(first, sDate, eDate) {
-//     let totalProfitAmt = 0
-//     let startDate = new Date(sDate);
-//     let endDate = new Date(eDate);
-//     let filtered = first.filter((data) => {
-//         let fdate = new Date(moment(data.due_paid_at).format('L'));
-//         return (
-//             fdate >= startDate && fdate <= endDate
-//         )
-//     });
-
-//     filtered.map(record => {
-//             totalProfitAmt += record.profit_amount
-//     }
-//     )
-//     return totalProfitAmt
-// }
-
 export function calcMonthlyTotalProfitAmt(first, m) {
     let totalProfitAmt = 0
     let month = new Date(m.toString()).getMonth();
@@ -166,7 +148,7 @@ export function calcMonthlyTotalProfitAmt(first, m) {
 
 export function calcDailyTotalProfitAmt(first, d) {
     let totalProfitAmt = 0
-    let day = new Date(d).getDate(); 
+    let day = new Date(d).getDate();
     let month = new Date(d).getMonth();
     let year = new Date(d).getFullYear();
     let filtered = first.filter((data) => {

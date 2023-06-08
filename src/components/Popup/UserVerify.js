@@ -24,10 +24,10 @@ function UserVerify({ handleClose }) {
 		is_verified: "",
 	}
 
-	
+
 	const verify = async (values) => {
 		const requestObj = { ...values };
-		try {	
+		try {
 			const response = await dispatch(verifyUser(requestObj)).unwrap();
 			// const response = await axios.post(`${baseUrl}/api/user/verify-account`, { user_id: values.user_id, is_verified: values.is_verified }, { headers: header });
 
@@ -36,15 +36,12 @@ function UserVerify({ handleClose }) {
 				// dispatch(increment());
 				setTimeout(() => {
 					handleClose(false);
-					// window.location.reload();
 				}, 1000);
 			} else {
 				toast.error(response.data.Message);
-				// toast.error(response.data.Message);
 			}
 		} catch (error) {
 			toast.error("Something Went Wrong!!");
-			// navigate(`/auth/login`);
 			console.log(error);
 		}
 	}

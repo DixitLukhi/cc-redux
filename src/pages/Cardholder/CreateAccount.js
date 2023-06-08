@@ -63,7 +63,7 @@ function CreateAccount() {
 		try {
 			const response = await dispatch(createAccount(requestObj)).unwrap();
 			// const response = await axios.post(`${baseUrl}/api/user/create-account`, requestObj, { headers: header });
-			
+
 			if (response.data.IsSuccess) {
 				toast.success(response.data.Message);
 				// dispatch(increment());
@@ -72,7 +72,6 @@ function CreateAccount() {
 				}, 1000);
 			} else {
 				toast.error(response.data.Message);
-				// toast.error(response.data.Message);
 			}
 			setLoading(false);
 		} catch (error) {

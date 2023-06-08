@@ -73,13 +73,11 @@ const authSlice = createSlice({
             state.user = {};
         },
         setKey: (state, action) => {
-            console.log("key : ", action.payload);
             state.key = action.payload
         }
     },
     extraReducers: (builder) => {
         builder.addCase(logInUser.fulfilled, (state, action) => {
-            console.log("user : ", action);
             let user = action?.payload?.data?.Data;
             localStorage.setItem("user", user ? JSON.stringify(user) : undefined);
             state.user = user ? user : {};

@@ -12,6 +12,7 @@ import { FilterMatchMode } from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import PaymentDetails from '../../components/Popup/PaymentDetails';
+import WithdrawPaymentDetails from '../../components/Popup/WithdrawPaymentDetails';
 
 function WithdrawRequests({ WithdrawData }) {
 
@@ -29,10 +30,9 @@ function WithdrawRequests({ WithdrawData }) {
 	}
 	const getPaymentRequests = () => {
 		setWithdrawRequest(WithdrawData.filter((request) => (request.payment_status === false) && request.payment_method === "Withdraw"));
-		
+
 		setLoading(false);
 	}
-	// paymentRequests.map((amount) => totalDueAmount += amount.due_amount);
 	useEffect(() => {
 		getPaymentRequests();
 	}, []);
@@ -52,15 +52,15 @@ function WithdrawRequests({ WithdrawData }) {
 	};
 
 	const initFilters = () => {
-        setFilters({
-            global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        });
-        setGlobalFilterValue('');
-    };
+		setFilters({
+			global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+		});
+		setGlobalFilterValue('');
+	};
 
 	const clearFilter = () => {
-        initFilters();
-    };
+		initFilters();
+	};
 
 	const renderHeader = () => {
 		return (
@@ -80,12 +80,7 @@ function WithdrawRequests({ WithdrawData }) {
 		{
 			header: 'Holder Name', field: (row) => {
 				return <div className="flex items-center">
-					{/* <div className="w-12 h-12 rounded-full overflow-hidden">
-						<img src={DemoImage} alt="" className='w-full h-full overflow-hidden' />
-					</div> */}
-					{/* <div className="pl-4"> */}
-						<span className="text-lg font-bold text-[#2D3643] block">{row.card.card_holder_name}</span>
-					{/* </div> */}
+					<span className="text-lg font-bold text-[#2D3643] block">{row.card.card_holder_name}</span>
 				</div>
 			},
 		},
@@ -136,11 +131,6 @@ function WithdrawRequests({ WithdrawData }) {
 				</div>
 			}
 		},
-		// {
-		// 	header: 'Payment Method', field: (row) => {
-		// 		return <div className="text-lg font-semibold text-yankeesBlue">{row.payment_method}</div>
-		// 	}
-		// },
 		{
 			header: '', field: (row) => {
 				return <div onClick={(e) => { e.stopPropagation(); setPayerData(row); setIsPayPopUpOpen(true); }} className="relative text-base font-semibold text-white inline-block bg-[#8FB50B] rounded-lg px-3 py-2">Withdraw</div>
@@ -154,23 +144,23 @@ function WithdrawRequests({ WithdrawData }) {
 					<ProgressSpinner style={{ width: '50px', height: '50px' }} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s" />
 				</div> :
 				withdrawRequest.length > 0 ?
-				<DataTable className='relative' value={withdrawRequest}
-					filters={filters}
-					globalFilterFields={['card.card_holder_name', 'card.card_number', 'card.card_bank_name', 'due_date']}
-					header={headerf}
-					// selectionMode="single"
-					// onSelectionChange={(col) => { localStorage.setItem("card_id", col.value.card_id); navigate("singlepaymentrequestdetails") }} 
-					columnResizeMode={"expand"} resizableColumns={true} scrollable={true} paginator rows={5}>
-					{columns.map((col, i) => (
+					<DataTable className='relative' value={withdrawRequest}
+						filters={filters}
+						globalFilterFields={['card.card_holder_name', 'card.card_number', 'card.card_bank_name', 'due_date']}
+						header={headerf}
+						// selectionMode="single"
+						// onSelectionChange={(col) => { localStorage.setItem("card_id", col.value.card_id); navigate("singlepaymentrequestdetails") }} 
+						columnResizeMode={"expand"} resizableColumns={true} scrollable={true} paginator rows={5}>
+						{columns.map((col, i) => (
 
-						<Column key={col.field} field={col.field} header={col.header} />
+							<Column key={col.field} field={col.field} header={col.header} />
 
-					))}
-				</DataTable>
-				: "No Withdraw Request Found."
+						))}
+					</DataTable>
+					: "No Withdraw Request Found."
 			}
 			<Modal isOpen={isPayPopUpOpen}>
-				<PaymentDetails handleClose={setIsPayPopUpOpen} payerData={payerData} />
+				<WithdrawPaymentDetails handleClose={setIsPayPopUpOpen} payerData={payerData} />
 			</Modal>
 		</>
 	)

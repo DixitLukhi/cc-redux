@@ -8,7 +8,10 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment/moment';
+import { useDispatch } from 'react-redux';
+import { addPaymentRequest } from '../../pages/Payments/paymentSlice';
 function PaymentDetails({ handleClose, dueData }) {
+    const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const token = localStorage.getItem("Token");
     const navigate = useNavigate();
@@ -40,10 +43,9 @@ function PaymentDetails({ handleClose, dueData }) {
     const DueDateSend = async (values) => {
         setLoading(true);
         const requestObj = { ...values };
-        console.log("b3351a59-6a46-47e7-aa21-9f219d66dac2", requestObj);
         try {
-            const response = await axios.post(`${baseUrl}/api/paymentRequest/add-payment-request-byadmin`, requestObj, { headers: header });
-            console.log("Response data", response.data);
+            const response = await dispatch(addPaymentRequest(requestObj)).unwrap();
+            // const response = await axios.post(`${baseUrl}/api/paymentRequest/add-payment-request-byadmin`, requestObj, { headers: header });
             if (response.data.IsSuccess) {
                 toast.success(response.data.Message);
                 navigate("../../payment");
@@ -96,7 +98,6 @@ function PaymentDetails({ handleClose, dueData }) {
                                 <Calendar name="due_date" className='due w-full py-[1px] overflow-hidden box-shadow' minDate={minDateValue} placeholder={new Date().toISOString().slice(0, 10)} onChange={(e) => setInputValue("due_date", moment(e.target.value).toISOString().slice(0, 10))} readOnlyInput />
                                 <small className="text-red-500 text-xs">{formik.errors.due_date}</small>
                             </div>
-                            {console.log("||  formik.values.due_date",formik.values.due_date)}
                             <div className='w-full md:w-1/2 mb-3 md:mb-0'>
                                 <label htmlFor="" className="inline-block text-sm font-bold text-yankeesBlue mb-1">Due Amount</label>
                                 <input type="number" name="due_amount" value={formik.values.due_amount} onChange={(e) => setInputValue("due_amount", e.target.value)} className="input_box placeholder:text-[#94A3B8] placeholder:text-base" placeholder='$2,000' />

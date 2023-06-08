@@ -17,8 +17,6 @@ function SingleCardHolderDetail({ handleClose, details }) {
 
 	const dispatch = useDispatch();
 	const token = localStorage.getItem("Token");
-	// const { state } = useLocation();
-	// const { data } = state;
 	const [loading, setLoading] = useState(true);
 	const user_id = localStorage.getItem("user_id");
 	const [isDisable, setIsDisable] = useState(true);
@@ -76,7 +74,6 @@ function SingleCardHolderDetail({ handleClose, details }) {
 			const response = await dispatch(editAccount(payload)).unwrap();
 			// const response = await axios.patch(`${baseUrl}/api/user/edit-user-profile`, { user_id: data.id, first_name: values.first_name, last_name: values.last_name, email: values.email, phone_no: values.phone_no }, { headers: header });
 			if (response.data.IsSuccess) {
-				// window.location.reload();
 				setTimeout(() => {
 					toast.success(response.data.Message);
 				}, 500);
@@ -102,7 +99,6 @@ function SingleCardHolderDetail({ handleClose, details }) {
 			cheque: data?.cheque
 			// profile_pic: details?.profile_pic,
 		})
-		// addUserDetails();
 	}, []);
 	const [values, setValues] = useState(initalState);
 	const changeHandler = (e) => {
@@ -147,12 +143,6 @@ function SingleCardHolderDetail({ handleClose, details }) {
 						<div className="flex flex-nowrap items-center justify-end space-x-3 mt-3 md:mt-0">
 							{!data.is_verified ?
 								<>
-									{/* <button onClick={() => setIsRejectPopUpOpen(true)} className="btn-red flex items-center">
-										<svg className='mr-3' width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-											<path fillRule="evenodd" clipRule="evenodd" d="M7.00016 13.6663C10.6821 13.6663 13.6668 10.6816 13.6668 6.99967C13.6668 3.31778 10.6821 0.333008 7.00016 0.333008C3.31826 0.333008 0.333496 3.31778 0.333496 6.99967C0.333496 10.6816 3.31826 13.6663 7.00016 13.6663ZM8.76792 6.10077C8.96318 5.90551 8.96318 5.58893 8.76792 5.39367C8.57265 5.19841 8.25607 5.19841 8.06081 5.39367L7.00015 6.45433L5.93949 5.39367C5.74423 5.19841 5.42765 5.19841 5.23238 5.39367C5.03712 5.58893 5.03712 5.90551 5.23238 6.10077L6.29304 7.16143L5.23238 8.2221C5.03712 8.41736 5.03712 8.73394 5.23238 8.9292C5.42765 9.12446 5.74423 9.12446 5.93949 8.9292L7.00015 7.86854L8.06081 8.9292C8.25607 9.12446 8.57266 9.12446 8.76792 8.9292C8.96318 8.73394 8.96318 8.41736 8.76792 8.2221L7.70726 7.16143L8.76792 6.10077Z" fill="#FF616D" />
-										</svg>
-										<span className="">Reject</span>
-									</button> */}
 									<button onClick={() => setIsVerifiedPopUpOpen(true)} className="btn-red flex items-center">
 										<img src={Verification} alt="verfication" className='pr-3' />
 										<span className="">Click to Verify</span>

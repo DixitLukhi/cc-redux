@@ -89,22 +89,6 @@ function AdminCards() {
       <div className="pt-12 p-5 -mx-5">
         <div className="flex flex-wrap">
           {cards.map((card) => (
-            // <div className="relative w-1/2 2xl:w-1/3 h-72 overflow-hidden px-3 2xl:mb-4" key={card.card_id}>
-            //     <div className="bg-[#0F172A] rounded-[32px] overflow-hidden">
-            //         <img src={CardBg} alt="Credit card background" className='w-full h-full object-cover' />
-            //         <div className="absolute inset-0 p-10">
-            //             <span className="text-lg text-white font-semibold">{card.card_holder_name}</span>
-            //             <div className="flex flex-col pt-6">
-            //                 <span className="text-[#94A3B8] text-base leading-7 font-normal">{card.card_bank_name}</span>
-            //                 <span className="text-white text-2xl font-semibold">********{JSON.stringify((card.card_number)).slice(8)}</span>
-            //             </div>
-            //             <div className="flex flex-col pt-6">
-            //                 <span className="text-[#94A3B8] text-base leading-7 font-normal">Total Credit</span>
-            //                 <span className="text-white text-2xl font-semibold">₹3,00,000</span>
-            //             </div>
-            //         </div>
-            //     </div>
-            // </div>
 
             <div
               key={card.card_id}
@@ -167,13 +151,6 @@ function AdminCards() {
           ))}
         </div>
       </div>
-      {/* credit card no Add */}
-      {/* <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-				<div className="flex items-center justify-center flex-col">
-					<img src={creditCard} alt="Credit Card Images" className='w-full h-full object-cover' />
-					<span className="text-[#64748B] text-3xl font-normal pt-5">Please add your cards</span>
-				</div>
-			</div> */}
     </div>
   );
 }

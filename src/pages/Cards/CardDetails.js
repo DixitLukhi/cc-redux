@@ -9,18 +9,18 @@ import Modal from '../../common/Modals/Modal';
 import SinglePhotoView from '../../components/Popup/SinglePhotoView';
 import PaymentDetails from '../../components/Popup/PaymentDetails';
 import CardHolderDueAmount from '../../components/Popup/CardHolderDueAmount';
+import { getUserCardById } from '../Cardholder/cardHolderSlice';
+import { useDispatch } from 'react-redux';
 export default function CardDetails() {
-	// const { state } = useLocation();
-	// const { data } = state;
 	const [data, setData] = useState({});
 	const [id, setId] = useState();
-
+	const dispatch = useDispatch();
 	const token = localStorage.getItem("Token");
 	const navigate = useNavigate();
 	const [isPhotoViewPopUpOpen, setIsPhotoViewPopUpOpen] = useState(false);
 	const [isPayPopUpOpen, setIsPayPopUpOpen] = useState(false);
 	const [dueAmountPop, setDueAmountPop] = useState(false);
-    const [viewNumber, setViewNumber] = useState(false)
+	const [viewNumber, setViewNumber] = useState(false)
 
 	const user_id = localStorage.getItem("user_id");
 	const card_id = localStorage.getItem("card_id");
@@ -33,8 +33,9 @@ export default function CardDetails() {
 	}
 	const getCardDetails = async () => {
 		try {
-			const response = await axios.get(`${baseUrl}/api/cards/cards-list?card_id=${card_id}&user_id=${user_id}`, { headers: header });
-			console.log(">>>>>", response.data.Data);
+
+			const response = await dispatch(getUserCardById(card_id)).unwrap();
+			// const response = await axios.get(`${baseUrl}/api/cards/cards-list?card_id=${card_id}&user_id=${user_id}`, { headers: header });
 			if (response.data.IsSuccess) {
 				setCard(response.data.Data);
 				setData(response.data.Data);
@@ -67,8 +68,6 @@ export default function CardDetails() {
 								</svg>
 								<h3 className="text-yankeesBlue leading-8 pl-7">{data.card_holder_name}</h3>
 							</div>
-							{/* <div className="flex items-center justify-between pb-9"> */}
-							{/* <h3 className="text-yankeesBlue leading-8">Card-Holder List</h3> */}
 							<div className="flex justify-end sm:justify-center mt-3 sm:mt-0 space-x-3">
 								<button to='createaccount' className="btn-secondary flex" onClick={() => navigate("../editcarddetails")}>
 									<svg className='mr-3' width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -76,16 +75,11 @@ export default function CardDetails() {
 									</svg>
 									Edit Details
 								</button>
-								<button to='createaccount' className="btn-secondary flex" onClick={() => { setId(data.card_photo); setIsPhotoViewPopUpOpen(true); }}>
+								<button to='createaccount' className="btn-secondary flex" onClick={() => { setId(data); setIsPhotoViewPopUpOpen(true); }}>
 									Card Photo
 								</button>
-								{/* onClick={(e) => { e.stopPropagation(); setDueData(row); setDueAmountPop(true); }} */}
 								<div onClick={() => { setDueAmountPop(true) }} className="btn-secondary flex cursor-pointer">Add Due</div>
-								{/* <div className="flex space-x-3"> */}
-								{/* <button onClick={() => setIsPayPopUpOpen(true)} className="btn-secondary flex px-5">Pay</button> */}
-								{/* </div> */}
 							</div>
-							{/* </div> */}
 						</div>
 						<div className="bg-lightWhite rounded-xl py-7 md:py-12 px-7 md:px-12 xl:px-24 mb-7">
 							<div className="flex flex-wrap md:flex-nowrap justify-center items-center md:space-x-5">
@@ -116,29 +110,10 @@ export default function CardDetails() {
 										</div>
 									</div>
 									<h2 className="text-yankeesBlue font-bold">{data?.card_number && data?.card_number !== "" ? <>{viewNumber ? data.card_number : `********${(data.card_number).toString().substr(-4)}`}</> : ""}</h2>
-									{/* <h2 className="text-yankeesBlue font-bold">{data?.card_number && data?.card_number !== "" ? <>********{(data.card_number).toString().substr(-4)}</> : ""}</h2> */}
 								</div>
 								<div className="w-full md:w-1/3 mb-3 md:mb-0">
 									<span className="text-base md:text-lg xl:text-xl font-semibold text-lightGray mb-3">Bank name</span>
 									<h2 className="text-yankeesBlue font-bold">{data.card_bank_name}</h2>
-								</div>
-							</div>
-						</div>
-						<div className="relative flex flex-wrap items-center- justify-start -mx-3 md:mb-[50px]">
-							<div className="w-full md:w-1/2 xl:w-1/4 p-3 2xl:px-5">
-								<div className="bg-[#ed4d3714] py-7 px-7 2xl::px-11 rounded-xl h-full">
-									<h2 className="text-[#ED4D37] mb-3">₹ {data.due_amount}</h2>
-									<span className="text-[# 64748B] text-base 2xl:text-xl font-semibold">
-										Total Due Amount
-									</span>
-								</div>
-							</div>
-							<div className="w-full md:w-1/2 xl:w-1/4 p-3 2xl:px-5">
-								<div className="bg-white border border-[#CBD5E1] py-7 px-7 2xl::px-11 rounded-xl h-full">
-									<h2 className="text-yankeesBlue mb-3">{moment(data.due_date).format('ll')}</h2>
-									<span className="text-[#64748B]  text-2xl:text-base xl font-semibold">
-										Due Date
-									</span>
 								</div>
 							</div>
 						</div>

@@ -30,7 +30,6 @@ function ResetPassword() {
 			const payload = { email: email, password: userData.password, password2: userData.password2 };
 
 			const response = await dispatch(newPassword(payload)).unwrap();
-			// const response = await axios.post(`${baseUrl}/api/user/reset-password`, { email: email, password: userData.password, password2: userData.password2 });
 			if (response.data.IsSuccess) {
 				toast.success(response.data.Message);
 				setTimeout(() => {

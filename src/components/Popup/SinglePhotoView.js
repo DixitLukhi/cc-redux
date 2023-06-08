@@ -12,11 +12,16 @@ export default function SinglePhotoView({ handleClose, id }) {
         </button>
         <div className="flex items-center justify-center h-full  ">
           <div className="w-1/2 p-2 md:p-3">
-            <img src={id} className="w-full h-full object-contain object-center " />
+
+
+            <img src={id && id?.frontside_card_photo ? id.frontside_card_photo : id} className="w-full h-full object-contain object-center " />
           </div>
-          <div className="w-1/2 p-2 md:p-3">
-            <img src={id} className="w-full h-full object-contain object-center" />
-          </div>
+          {id && id.backside_card_photo ?
+            <div className="w-1/2 p-2 md:p-3">
+              <img src={id && id.backside_card_photo ? id.backside_card_photo : ""} className="w-full h-full object-contain object-center" />
+            </div>
+            : ""
+          }
         </div>
       </div>
     </div>

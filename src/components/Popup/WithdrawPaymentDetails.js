@@ -5,15 +5,18 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { baseurl } from '../../../api/baseurl';
 import { Dropdown } from 'primereact/dropdown';
+import { baseUrl } from '../../api/baseUrl';
 import Summary from './Summary';
-import Modal from '../../../common/Modals/Modal';
+import Modal from '../../common/Modals/Modal';
+import { useDispatch } from 'react-redux';
+import { paymentListById } from '../../redux/services/paymentServices/cardHolderServices';
+import { addPaymentRecord } from '../../pages/Payments/paymentSlice';
 
 function WithdrawPaymentDetails({ handleClose, payerData, setReload }) {
 
     const navigate = useNavigate();
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
     const token = localStorage.getItem("Token");
     const header = {
@@ -21,8 +24,6 @@ function WithdrawPaymentDetails({ handleClose, payerData, setReload }) {
         // 'Content-Type': 'multipart/form-data'
     }
     const [paymentRecord, setPaymentRecord] = useState([]);
-    // const [sumOfAmount, setSumOfAmount] = useState(0);
-    // let sumOfAmount = 0;
     const [sumOfAmount, setSumOfAmount] = useState(0)
     const [acceptTerm, setAcceptTerm] = useState(false);
     const [isCheck, setIsCheck] = useState(false)
@@ -42,7 +43,6 @@ function WithdrawPaymentDetails({ handleClose, payerData, setReload }) {
         profit: "",
         cycle_deposit_status: false,
         cycle_withdraw_status: false,
-        // payment_method_flag: ""
     }
 
     const ValidationSchema = Yup.object().shape({
@@ -62,63 +62,31 @@ function WithdrawPaymentDetails({ handleClose, payerData, setReload }) {
         { name: 'Partial payment', value: 'Partial payment' },
     ];
 
-    // payerData.due_amount - sumOfAmount >= 0 ? false : true
-    // console.log("paid_amount", (formik.values.paid_amount + paymentRecord) >= payerData.due_amount ? payment_status = true :  payment_status = false);   
-
 
 
     const clickNextHandler = async (values) => {
         setLoading(true);
         const requestObj = { ...values }
 
-        // console.log("values", ...values);
-        // console.log("requestObj", requestObj);
-        // console.log("formik", formik);
-
         try {
             if (parseFloat(formik.values.paid_amount) + parseFloat(sumOfAmount) > parseFloat(payerData.due_amount)) {
                 setLoading(false);
                 return toast.error("You are in advanced payment.");
-                
+
             } else if (parseFloat(formik.values.paid_amount) + parseFloat(sumOfAmount) === parseFloat(payerData.due_amount)) {
-                // console.log("111", typeof (formik.values.paid_amount));
-                // console.log("1112222", typeof Number(formik.values.paid_amount));
-                // console.log("222", typeof (sumOfAmount));
-                // console.log("333", typeof (payerData.due_amount));
-                // if (Number(formik.values.paid_amount) + sumOfAmount >= payerData.due_amount) {
                 requestObj.payment_status = true;
             } else {
                 requestObj.payment_status = false;
             }
+            const response = await dispatch(addPaymentRecord(requestObj)).unwrap();
 
-            // if (payerData.payment_method === "Cycle") {
-            //     if (payerData.cycle_deposit_status === false) {
-            //         requestObj["payment_method_flag"] = "Cycle Deposit"
-            //     } else {
-            //         requestObj["payment_method_flag"] = "Cycle Withdraw"
-            //     }
-            // }
-
-            // if (payerData.payment_method === "Cycle" && payerData.cycle_deposit_status === false && parseFloat(parseFloat(formik.values.paid_amount) + parseFloat(sumOfAmount)) >= parseFloat(payerData.due_amount)) {
-            //     requestObj.cycle_deposit_status = true;
-            //     requestObj.cycle_withdraw_status = false;
-            // } else if (payerData.payment_method === "Cycle" && payerData.cycle_withdraw_status === false && parseFloat(parseFloat(formik.values.paid_amount) + parseFloat(sumOfAmount)) >= parseFloat(payerData.due_amount)) {
-            //     requestObj.cycle_withdraw_status = true;
-            //     requestObj.cycle_deposit_status = true;
-            // }
-            const response = await axios.post(`${baseurl}/api/transaction/add-payment-record`, requestObj, { headers: header });
-            // console.log("Payment Data >> ", response.data.Data);
             if (response.data.IsSuccess) {
-                // formik.values.due_paid_through = "";
-                // formik.values.paid_amount = "";
-                // formik.values.withdraw_charges = "";
-                // formik.values.profit = "";
+
                 setGet(!get);
                 if (requestObj.payment_status) {
                     setIsSummary(true)
                 }
-                // handleClose(false);
-                // setReloade(true);
+
             } else {
                 toast.error(response.data.Message);
             }
@@ -147,7 +115,8 @@ function WithdrawPaymentDetails({ handleClose, payerData, setReload }) {
 
     const getPaymentRecords = async () => {
         try {
-            const response = await axios.get(`${baseurl}/api/transaction/all-payment-record-list?request_id=${payerData.request_id}`, { headers: header })
+            const response = await dispatch(paymentListById).unwrap(payerData.request_id);
+            // const response = await axios.get(`${baseUrl}/api/transaction/all-payment-record-list?request_id=${payerData.request_id}`, { headers: header })
             if (response.data.IsSuccess) {
 
                 if (payerData.payment_method !== "Cycle") {
@@ -184,9 +153,6 @@ function WithdrawPaymentDetails({ handleClose, payerData, setReload }) {
 
     }, [paymentRecord])
 
-    // paymentRecord.map((r, i) => <div key={i}>{sumOfAmount += r.paid_amount}</div>);
-
-    // console.log(">>>>>>>>", paymentRecord);
     return (
         <div className='fixed inset-0 w-screen h-screen bg-[rgba(0,0,0,0.4)] overflow-auto flex backdrop-blur-[1px] z-50 select-none'>
             <div className="max-w-[1005px] w-full  m-auto bg-white rounded-3xl shadow-shadowbox p-5 md:p-11">
@@ -279,7 +245,7 @@ function WithdrawPaymentDetails({ handleClose, payerData, setReload }) {
                                         <span>₹ {(rec.withdraw_charges * rec.paid_amount) / 100}</span> +
                                         <span>₹ {((rec.profit * rec.paid_amount) / 100)}</span> =
                                         <span>₹ {
-                                        ((rec.withdraw_charges * rec.paid_amount) / 100) + rec.paid_amount + ((rec.profit * rec.paid_amount) / 100)}</span>
+                                            ((rec.withdraw_charges * rec.paid_amount) / 100) + rec.paid_amount + ((rec.profit * rec.paid_amount) / 100)}</span>
                                     </div>
                                 </div>
                             </div>
@@ -351,18 +317,6 @@ function WithdrawPaymentDetails({ handleClose, payerData, setReload }) {
                     </div>
                 </form>
             </div >
-            {/* <ToastContainer
-                position="bottom-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored"
-            /> */}
             <Modal isOpen={isSummary}>
                 <Summary handleClose={setIsSummary} paymentRecord={paymentRecord} />
             </Modal>

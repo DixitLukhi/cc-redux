@@ -25,7 +25,6 @@ function SingleUserCommissionDetails() {
     const getUserCommission = async () => {
         try {
             const response = await dispatch(getProfitById(transaction_id)).unwrap();
-           console.log("r : ", response.data);
             // const response = await axios.get(`${baseUrl}/api/cards/cards-list?card_id=${card_id}`, { headers: header });
             if (response.data.IsSuccess) {
                 setUserCommission(response.data.Data);
@@ -87,7 +86,7 @@ function SingleUserCommissionDetails() {
                             <div className="md:hidden flex justify-start sm:mt-3 md:mt-0">
                                 {userCommission.card.card_status === false ? <div className="inline-block text-sm md:text-xl font-semibold text-[#ED4D37] bg-[#f3e7e7] rounded-lg px-2 sm:px-5 2xl:px-6 py-2 sm:py-4 2xl:py-5">Unpaid</div>
                                     : <div className="inline-block text-sm md:text-xl font-semibold text-[#097C69] bg-[#E2F8F5] rounded-lg px-2 sm:px-5 2xl:px-6 py-2 sm:py-4 2xl:py-5">Paid</div>}
-                            </div>                            
+                            </div>
                         </div>
                         <div className="relative flex flex-wrap items-center- justify-start mb-[50px]">
                             <div className="w-full md:w-1/2 xl:w-1/4 p-3 2xl:px-5">
@@ -109,7 +108,7 @@ function SingleUserCommissionDetails() {
                             </div>
                             <div className="w-full md:w-1/2 xl:w-1/4 p-3 2xl:px-5">
                                 <div className="bg-white border border-[#CBD5E1] py-7 px-7 2xl::px-11 rounded-xl h-full">
-                                    <h2 className="text-yankeesBlue mb-3">{userCommission.profit ? userCommission.profit + "%": "-"}</h2>
+                                    <h2 className="text-yankeesBlue mb-3">{userCommission.profit ? userCommission.profit + "%" : "-"}</h2>
                                     <span className="text-[#64748B] text-base 2xl:text-xl font-semibold">
                                         Commission
                                     </span>

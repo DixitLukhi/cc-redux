@@ -5,7 +5,6 @@ import axios from 'axios';
 import { baseUrl } from '../../api/baseUrl';
 import { ToastContainer, toast } from 'react-toastify';
 import { Column } from 'primereact/column';
-// import DataTable from 'react-data-table-component';
 import { DataTable } from 'primereact/datatable';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import DemoImage from "../../assets/images/profile.png"
@@ -15,9 +14,8 @@ import Modal from '../../common/Modals/Modal';
 import CardHolderDueAmount from '../../components/Popup/CardHolderDueAmount';
 import { useDispatch } from 'react-redux';
 import { getCards, getUser } from './cardHolderSlice';
+
 export default function SingleCardHolderCardsList() {
-    // const { state } = useLocation();
-    // const { data } = state;
     const dispatch = useDispatch();
     const [loading1, setLoading1] = useState(true);
     const [dueAmountPop, setDueAmountPop] = useState(false);
@@ -26,7 +24,6 @@ export default function SingleCardHolderCardsList() {
     const [listView, setListView] = useState(false);
     const [userData, setUserData] = useState({});
     const [dueData, setDueData] = useState({});
-    // const [userDueAmount, setUserDueAmount] = useState({});
     const navigate = useNavigate();
     const token = localStorage.getItem("Token");
     const user_id = localStorage.getItem("user_id");
@@ -58,7 +55,6 @@ export default function SingleCardHolderCardsList() {
             const response = await dispatch(getCards(user_id)).unwrap();
             // const response = await axios.get(`${baseUrl}/api/cards/cards-list?user_id=${user_id}`, { headers: header });
             if (response.data.IsSuccess) {
-                // toast.success(response.data.Message);
                 setListCards(response.data.Data);
                 setLoading2(false);
             }
@@ -110,20 +106,6 @@ export default function SingleCardHolderCardsList() {
                 return <div className="text-lg font-semibold text-yankeesBlue">{row.card_bank_name}</div>
             }
         },
-        // {
-        //     header: 'Total Due', field: (row) => {
-        //         return <div className="text-lg font-semibold text-[#E52B2B]">
-        //             ₹ {row.due_amount}
-        //         </div>
-        //     }
-        // },
-        // {
-        //     header: 'Due Date', field: (row) => {
-        //         return <div className="text-lg font-semibold text-yankeesBlue">
-        //             {moment(row.due_date).format('ll')}
-        //         </div>
-        //     }
-        // },
         {
             header: 'Deposit Charge', field: (row) => {
                 return <div className="text-lg font-semibold text-yankeesBlue">₹ {0}</div>
@@ -141,7 +123,7 @@ export default function SingleCardHolderCardsList() {
         },
         {
             header: 'Add Due', field: (row) => {
-                return <div onClick={(e) => { e.stopPropagation(); setDueData(row);  setDueAmountPop(true); }} className="relative text-base font-semibold text-white inline-block bg-[#8FB50B] rounded-lg px-3 py-2">Add Due</div>
+                return <div onClick={(e) => { e.stopPropagation(); setDueData(row); setDueAmountPop(true); }} className="relative text-base font-semibold text-white inline-block bg-[#8FB50B] rounded-lg px-3 py-2">Add Due</div>
             }
         },
 
@@ -215,53 +197,28 @@ export default function SingleCardHolderCardsList() {
                     </div>
                 </div>
             </div> */}
-            {listCards.length > 0 ? 
-                        !listView ?
-                            <>
-                                {/* List View  */}
-                                <div className="sm:mt-9">
-                                    {/* <DataTable value={listCreditCard}>
-                    {columns.map((col, i) => (
-                        <Column key={col.field} field={col.field} header={col.header} />
-                    ))}
-                </DataTable> */}
-                                    {/* <DataTable columns={columns} data={listCards}
-                                Clicked 
-                                onRowClicked={(row) => {localStorage.setItem("card_id", row.card_id); navigate("../singlecarddetails")}}
-                                /> */}
-                                    <DataTable value={listCards} selectionMode="single" columnResizeMode={"expand"} resizableColumns={true} scrollable={true}
-                                        onSelectionChange={(col) => { localStorage.setItem("card_id", col.value.card_id); navigate("../singlecarddetails") }} paginator rows={5}>
-                                        {columns.map((col, i) => (
+                        {listCards.length > 0 ?
+                            !listView ?
+                                <>
+                                    {/* List View  */}
+                                    <div className="sm:mt-9">
+                                        <DataTable value={listCards} selectionMode="single" columnResizeMode={"expand"} resizableColumns={true} scrollable={true}
+                                            onSelectionChange={(col) => { localStorage.setItem("card_id", col.value.card_id); navigate("../singlecarddetails") }} paginator rows={5}>
+                                            {columns.map((col, i) => (
 
-                                            <Column className="relative" key={col.field} field={col.field} header={col.header} />
+                                                <Column className="relative" key={col.field} field={col.field} header={col.header} />
 
-                                        ))}
-                                    </DataTable>
-                                </div>
-                            </>
-                            :
-                           
+                                            ))}
+                                        </DataTable>
+                                    </div>
+                                </>
+                                :
+
                                 <>
 
                                     {/* Card View  */}
                                     <div className="flex justify-start flex-wrap sm:mt-9">
                                         {listCards.map((card) =>
-                                            // <div className="relative w-1/2 2xl:w-1/3 h-72 overflow-hidden px-3 2xl:mb-4" onClick={() => { localStorage.setItem("card_id", card.card_id); navigate("../singlecarddetails") }}>
-                                            //     <div className="bg-[#0F172A] rounded-[32px] overflow-hidden">
-                                            //         <img src={CardBg} alt="Credit card background" className='w-full h-full object-cover' />
-                                            //         <div className="absolute inset-0 p-10">
-                                            //             <span className="text-lg text-white font-semibold">{card.card_holder_name}</span>
-                                            //             <div className="flex flex-col pt-6">
-                                            //                 <span className="text-[#94A3B8] text-base leading-7 font-normal"></span>
-                                            //                 <span className="text-white text-2xl font-semibold">********{(card.card_number).toString().substr(-4)}</span>
-                                            //             </div>
-                                            //             <div className="flex flex-col pt-6">
-                                            //                 <span className="text-[#94A3B8] text-base leading-7 font-normal">Total Credit</span>
-                                            //                 <span className="text-white text-2xl font-semibold"> ₹ {card.due_amount}</span>
-                                            //             </div>
-                                            //         </div>
-                                            //     </div>
-                                            // </div>
 
                                             <div className="relative w-full md:w-1/2 xl:w-1/3 overflow-hidden sm:px-3 2xl:mb-4 mb-4" onClick={() => { localStorage.setItem("card_id", card.card_id); navigate("../singlecarddetails") }}>
                                                 <div className="bg-[#0F172A] rounded-2xl lg:rounded-[32px] overflow-hidden relative max-w-[412px] md:mr-auto mx-auto">
@@ -313,7 +270,7 @@ export default function SingleCardHolderCardsList() {
                                         )}
                                     </div>
                                 </>
-                                : <div className="flex items-center justify-center">
+                            : <div className="flex items-center justify-center">
                                 <div className="flex items-center justify-center flex-col">
                                     <img
                                         src={creditCard}

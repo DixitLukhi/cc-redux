@@ -32,7 +32,6 @@ function PaymentRequests({ paymentRequestData, setReloade }) {
 		setLoading(false);
 
 	}
-	// paymentRequests.map((amount) => totalDueAmount += amount.due_amount);
 
 	useEffect(() => {
 		getPaymentRequests();
@@ -81,12 +80,7 @@ function PaymentRequests({ paymentRequestData, setReloade }) {
 		{
 			header: 'Holder Name', field: (row) => {
 				return <div className="flex items-center">
-					{/* <div className="w-12 h-12 rounded-full overflow-hidden">
-						<img src={DemoImage} alt="" className='w-full h-full overflow-hidden' />
-					</div> */}
-					{/* <div className="pl-4"> */}
 					<span className="text-lg font-bold text-[#2D3643] block">{row.card.card_holder_name}</span>
-					{/* </div> */}
 				</div>
 			},
 		},
@@ -136,11 +130,6 @@ function PaymentRequests({ paymentRequestData, setReloade }) {
 				</div>
 			}
 		},
-		// {
-		// 	header: 'Payment Method', field: (row) => {
-		// 		return <div className="text-lg font-semibold text-yankeesBlue">{row.payment_method}</div>
-		// 	}
-		// },
 		{
 			header: '', field: (row) => {
 				return <div onClick={(e) => { e.stopPropagation(); setPayerData(row); setIsPayPopUpOpen(true); }} className="relative text-base font-semibold text-white inline-block bg-[#8FB50B] rounded-lg px-3 py-2">Pay</div>
@@ -159,7 +148,7 @@ function PaymentRequests({ paymentRequestData, setReloade }) {
 						globalFilterFields={['card.card_holder_name', 'card.card_number', 'card.card_bank_name', 'due_date']}
 						header={headerf}
 						selectionMode="single"
-						onSelectionChange={(col) => { localStorage.setItem("request_id", col.value.request_id); navigate("singlepaymentrequestdetails") }} 
+						onSelectionChange={(col) => { localStorage.setItem("request_id", col.value.request_id); navigate("singlepaymentrequestdetails") }}
 						columnResizeMode={"expand"} resizableColumns={true} scrollable={true} paginator rows={5}>
 						{columns.map((col, i) => (
 

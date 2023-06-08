@@ -50,20 +50,14 @@ function SideBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = localStorage.getItem("Token");
-  // const [details, setDetails] = useState({});
   const [navbarOpen, setNavbarOpen] = useState(false);
   const header = {
     Authorization: `Bearer ${token}`,
   };
   let profile = useProfile();
-  // const a = useSelector(state => state.dashboard);
   const getProfileDetails = async () => {
     try {
       await dispatch(getProfile()).unwrap();
-      // const response = await axios.get(`${baseUrl}/api/user/user-profile`, {
-      //   headers: header,
-      // });
-      // setDetails(response.data.Data);
     } catch (error) {
       console.log(error);
     }

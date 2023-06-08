@@ -47,14 +47,10 @@ const Register = () => {
 	});
 
 	const handelRegister = async (values) => {
-		// if (values.password === values.password2) {
-		// return
 		setLoading(true);
 		try {
 			const payload = Object.assign({}, values);
 			const response = await dispatch(registration(payload)).unwrap();
-
-			// const response = await axios.post(`${baseUrl}/api/user/register-admin`, values);
 			if (response.data?.IsSuccess) {
 				toast.success("Registered successfully.")
 				setTimeout(() => {
@@ -70,12 +66,6 @@ const Register = () => {
 			toast.error("something Went to Wrong!!");
 			setLoading(false);
 		}
-		// } else {
-		// 	toast.warn("Confirm password and password not match.");
-		// 	setTimeout(() => {
-		// 		return;
-		// 	}, 1500);
-		// }
 	}
 	return (
 		<div className="flex m-auto">

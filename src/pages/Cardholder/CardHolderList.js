@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react'
-// import { DataTable } from 'primereact/datatable';
-// import DataTable from 'react-data-table-component';
 import { DataTable } from 'primereact/datatable';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Column } from 'primereact/column';
-// import { ProductService } from '../service/ProductService';
 import 'primeicons/primeicons.css';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.css';
 import { Link, useNavigate } from 'react-router-dom';
-// import 'primeflex/primeflex.css';
 import DemoImage from "../../assets/images/profile.png"
 import { baseUrl } from "../../api/baseUrl";
 import axios from 'axios';
@@ -20,12 +16,9 @@ import SinglePhotoView from '../../components/Popup/SinglePhotoView';
 import CreateAccount from './CreateAccount';
 import { useBarData } from '../Dashboard/dashboardSlice';
 import { useDispatch } from 'react-redux';
-import { getUserList } from './cardHolderSlice';
+import { deleteUserByAdmin, getUserList } from './cardHolderSlice';
 
 function CardHolderList() {
-	// const [products, setProducts] = useState([]);
-	// const [multiSortMeta, setMultiSortMeta] = useState([{ field: 'category', order: -1 }]);
-	// const productService = new ProductService();
 	const dispatch = useDispatch();
 	const [users, setUsers] = useState([]);
 	const [totalCardHolders, setTotalCardHolders] = useState(0);
@@ -43,9 +36,6 @@ function CardHolderList() {
 	localStorage.removeItem("card_id");
 	localStorage.removeItem("request_id");
 
-	// useEffect(() => {
-	//     productService.getProductsSmall().then(data => setProducts(data));
-	// }, []); // eslint-disable-line react-hooks/exhaustive-deps
 	const header = {
 		'Authorization': `Bearer ${user}`
 	}
@@ -70,7 +60,8 @@ function CardHolderList() {
 
 	const deleteCardHolder = async (id) => {
 		try {
-			const response = await axios.delete(`${baseUrl}/api/user/admin-delete-user?user_id=${id}`, { headers: header });
+			const response = await dispatch(deleteUserByAdmin(id)).unwrap();
+			// const response = await axios.delete(`${baseUrl}/api/user/admin-delete-user?user_id=${id}`, { headers: header });
 			if (response.data.IsSuccess) {
 				setUpdate(!update);
 				toast.success(response.data.Message);
@@ -97,7 +88,6 @@ function CardHolderList() {
 				);
 			},
 		},
-		// { name: 'first_name', header: 'Holder Name', field: row => row.first_name, },
 		{
 			header: "Email", field: row => <div className="flex">
 				<span className="text-lg text-yankeesBlue font-semibold block">{row.email}</span>
@@ -138,16 +128,13 @@ function CardHolderList() {
 		},
 		{
 			header: 'Cards', field: row =>
-				// <div className="flex justify-center items-center gap-3 border border-[#1E293B] rounded-lg py-1.5 max-w-[78px] w-full" onClick={(e) => { localStorage.setItem("user_id", row.id); navigate("../cardholder/singlecardholdercardlist"); e.stopPropagation(); }}>
 				<div to='createaccount' className="flex justify-center items-center gap-3  rounded-lg py-1.5 max-w-[78px] w-full btn-secondary" onClick={(e) => { localStorage.setItem("user_id", row.id); navigate("../cardholder/singlecardholdercardlist"); e.stopPropagation(); }}>
 					View
 				</div>
-			// </div>
 
 		},
 		{
 			header: 'Actions', field: (row) => (
-				// return (
 				<div className="flex justify-start items-center">
 					<button type="button" className="p-3" onClick={(e) => { localStorage.setItem("user_id", row.id); navigate('singlecardholderdetail'); e.stopPropagation(); }}>
 						<svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -187,12 +174,6 @@ function CardHolderList() {
 							</svg>
 							Create Account
 						</Link>
-						{/* <Link to='../dashboard/adminaddcard' className="btn-secondary flex">
-						<svg className='mr-3' width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M8.6 1.6C8.6 1.26863 8.33137 1 8 1C7.66863 1 7.4 1.26863 7.4 1.6L7.4 7.4H1.6C1.26863 7.4 1 7.66863 1 8C1 8.33137 1.26863 8.6 1.6 8.6H7.4V14.4C7.4 14.7314 7.66863 15 8 15C8.33137 15 8.6 14.7314 8.6 14.4V8.6H14.4C14.7314 8.6 15 8.33137 15 8C15 7.66863 14.7314 7.4 14.4 7.4H8.6L8.6 1.6Z" fill="white" stroke="white" strokeLinecap="round" />
-						</svg>
-						Add Card
-					</Link> */}
 					</div>
 				</div>
 				{loading ?
@@ -201,32 +182,16 @@ function CardHolderList() {
 					</div>
 					:
 					totalCardHolders > 0 ?
-					<div className="card">
-						{/* <DataTable sortMode="multiple" responsiveLayout="scroll"> */}
-						{/* <Column field="Holder Name" header="Holder Name" sortable></Column> */}
-						{/* <Column header="Holder Name" body={representativeBodyTemplate} sortable />
-					<Column field="Email" header="Email" sortable></Column>
-					<Column field="Phone Number" header="Phone Number" sortable></Column>
-					<Column field="Aadhar card" header="Aadhar card" body={aadharCardBodyTemplate} sortable></Column>
-					<Column field="Pan Card" header="Pan Card" body={panCardBodyTemplate} sortable></Column>
-					<Column field="Cheque" header="Cheque" body={ChequeBodyTemplate} sortable></Column> */}
-						{/* </DataTable> */}
+						<div className="card">
+							<DataTable value={cardHolders} selectionMode="single" columnResizeMode={"expand"} resizableColumns={true} scrollable={true}
+								onSelectionChange={(col) => { localStorage.setItem("user_id", col.value.id); navigate('singlecardholderdetail') }} paginator rows={5}>
+								{columns.map((col, i) => (
+									<Column className="relative" key={col.field} field={col.field} header={col.header} />
+								))}
+							</DataTable>
+						</div>
+						: "No Card Holder Exist"
 
-						<DataTable value={cardHolders} selectionMode="single" columnResizeMode={"expand"} resizableColumns={true} scrollable={true}
-							onSelectionChange={(col) => { localStorage.setItem("user_id", col.value.id); navigate('singlecardholderdetail') }} paginator rows={5}>
-							{columns.map((col, i) => (
-								<Column className="relative" key={col.field} field={col.field} header={col.header} />
-							))}
-						</DataTable>
-						{/* <DataTable columns={columns} data={cardHolders} 
-					Clicked 
-
-					// onRowClicked={(row) => navigate('singlecardholderdetail',{ state: { data: row } })}
-					onRowClicked={(row) => {localStorage.setItem("user_id", row.id); navigate('singlecardholderdetail')}}
-					/> */}
-					</div>
-					 : "No Card Holder Exist"
-					
 				}
 			</div>
 			<Modal isOpen={isSingleUserPopUpOpen}>

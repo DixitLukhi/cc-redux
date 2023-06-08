@@ -11,8 +11,7 @@ import { useDispatch } from 'react-redux';
 import { getAdminCardByID } from './adminSlice';
 
 export default function AdminCardDetails() {
-	// const { state } = useLocation();
-	// const { data } = state;
+
 	const dispatch = useDispatch();
 	const [data, setData] = useState({});
 	const [id, setId] = useState();
@@ -63,8 +62,7 @@ export default function AdminCardDetails() {
 								</svg>
 								<h3 className="text-yankeesBlue leading-8 pl-7">{data.card_holder_name}</h3>
 							</div>
-							{/* <div className="flex items-center justify-between pb-9"> */}
-							{/* <h3 className="text-yankeesBlue leading-8">Card-Holder List</h3> */}
+
 							<div className="flex justify-end sm:justify-center mt-3 sm:mt-0 space-x-3">
 								<button to='createaccount' className="btn-secondary flex" onClick={() => navigate("../admineditcard")}>
 									<svg className='mr-3' width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -72,11 +70,10 @@ export default function AdminCardDetails() {
 									</svg>
 									Edit Details
 								</button>
-								<button to='createaccount' className="btn-secondary flex" onClick={() => { setId(data.card_photo); setIsPhotoViewPopUpOpen(true); }}>
+								<button className="btn-secondary flex" onClick={() => { setId(data); setIsPhotoViewPopUpOpen(true); }}>
 									Card Photo
 								</button>
 							</div>
-							{/* </div> */}
 						</div>
 						<div className="bg-lightWhite rounded-xl py-7 md:py-12 px-7 md:px-12 xl:px-24 mb-7">
 							<div className="flex flex-wrap md:flex-nowrap justify-center items-center md:space-x-5">

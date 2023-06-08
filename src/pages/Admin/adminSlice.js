@@ -18,7 +18,6 @@ export const getProfile = createAsyncThunk(
 export const editProfile = createAsyncThunk(
     "admin/editProfile",
     async (payload) => {
-        console.log("p : ", payload);
         return await editProfileDetails(payload);
     }
 );
@@ -51,10 +50,10 @@ export const editAdminCard = createAsyncThunk(
     }
 );
 
-export const deleteCard = createAsyncThunk( "admin/deleteCard",
-async (cardId) => {
-    return await deleteAdminCard(cardId);
-})
+export const deleteCard = createAsyncThunk("admin/deleteCard",
+    async (cardId) => {
+        return await deleteAdminCard(cardId);
+    })
 const adminSlice = createSlice({
     name: "adminSlice",
     initialState,
@@ -67,13 +66,8 @@ const adminSlice = createSlice({
             state.profileDetails = action?.payload?.data?.Data;
         });
         builder.addCase(getAdminCards.fulfilled, (state, action) => {
-            console.log("state : ", state);
-            console.log("action : ", action.payload.data.Data);
             state.adminCards = action?.payload?.data?.Data;
         });
-        builder.addCase(addAdminCard.fulfilled, (state, action) => {
-            // state.adminCards.push(action.payload.data.Data) 
-        })
     }
 })
 

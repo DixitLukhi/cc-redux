@@ -17,7 +17,7 @@ const Login = () => {
     const [userData, setUserData] = useState({ email: "", password: "" });
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
-    const { user} = useUser();
+    const { user } = useUser();
     const token = user.token || null;
     const setFormField = (field, value) => {
         setUserData({ ...userData, [field]: value })
@@ -33,12 +33,9 @@ const Login = () => {
 
             const response = await dispatch(logInUser(payload)).unwrap();
 
-            // const response = await axios.post(`${baseUrl}/api/user/login-admin`, { email: userData.email, password: userData.password });
             if (response.data?.IsSuccess) {
                 toast.success("Login successfully.");
                 setTimeout(() => {
-                    // localStorage.clear();
-                    // localStorage.setItem("Token", response.data?.Data.token);
                     navigate("../dashboard")
                 }, 1000);
                 setLoading(true);

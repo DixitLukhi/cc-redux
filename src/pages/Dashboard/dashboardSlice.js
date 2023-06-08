@@ -15,17 +15,16 @@ export const getBarData = createAsyncThunk(
     }
 );
 
-export const getPieData = createAsyncThunk( "dashboard/getPieData", async () => {
+export const getPieData = createAsyncThunk("dashboard/getPieData", async () => {
     return await pieData();
 });
 
 const dashboardSlice = createSlice({
-    name : "dashboardSlice",
+    name: "dashboardSlice",
     initialState,
-    reducers : {},
-    extraReducers : (builder) => {
+    reducers: {},
+    extraReducers: (builder) => {
         builder.addCase(getBarData.fulfilled, (state, action) => {
-            // console.log("hi", action.payload.data.Data);
             state.barData = action?.payload?.data?.Data;
         });
         builder.addCase(getPieData.fulfilled, (state, action) => {
@@ -35,16 +34,3 @@ const dashboardSlice = createSlice({
 })
 
 export default dashboardSlice.reducer;
-
-// export const selectBarData = (state) => state.dashboard.barData;
-// export const selectPieData = (state) => state.dashboard.pieData;
-
-// export const useBarData = () => {
-//     const barData = useSelector(selectBarData);
-//     return useMemo(() => barData, [barData]);
-// };
-
-// export const usePieData = () => {
-//     const pieData = useSelector(selectPieData);
-//     return useMemo(() => pieData, [pieData]);
-// };
